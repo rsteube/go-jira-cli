@@ -12,7 +12,7 @@ type ListIssuesOptions struct {
 	Type     []string
 	Status   []string
 	Assignee []string
-    Fields   []string
+	Fields   []string
 	Search   *string
 }
 

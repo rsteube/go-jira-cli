@@ -42,5 +42,8 @@ func init() {
 		"status": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionStatuses(issue_listCmd).Invoke(c).Filter(c.Parts).ToA()
 		}),
+		"type": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionIssueTypes(issue_listCmd, opts.Project).Invoke(c).Filter(c.Parts).ToA()
+		}),
 	})
 }
