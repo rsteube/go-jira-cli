@@ -20,9 +20,15 @@ func (o *ListIssuesOptions) Jql() string {
 	//project in (SZOPS, BA) AND issuetype in (Bug, CVE) AND status in ("In Progress", Reopened) AND assignee in (membersOf("Interner Benutzer"), membersOf(jira-developers))
 	jql := make([]string, 0)
 	if o.Project != nil && len(o.Project) > 0 {
-		jql = append(jql, fmt.Sprintf(`project in (%v)`, strings.Join(o.Project, ",")))
+		jql = append(jql, fmt.Sprintf(`project in ('%v')`, strings.Join(o.Project, "','")))
 	}
-	return strings.Join(jql, " ")
+	if o.Type != nil && len(o.Type) > 0 {
+		jql = append(jql, fmt.Sprintf(`type in ('%v')`, strings.Join(o.Type, "','")))
+	}
+	if o.Status != nil && len(o.Status) > 0 {
+		jql = append(jql, fmt.Sprintf(`status in ('%v')`, strings.Join(o.Status, "','")))
+	}
+	return strings.Join(jql, " AND ")
 }
 
 func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
