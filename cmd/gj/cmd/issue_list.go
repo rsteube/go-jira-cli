@@ -21,21 +21,10 @@ var issue_listCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return Pager(func(io *iostreams.IOStreams) error {
+		return output.Pager(func(io *iostreams.IOStreams) error {
 			return output.PrintIssues(io, issues)
 		})
 	},
-}
-
-func Pager(f func(io *iostreams.IOStreams) error) error {
-	io := iostreams.System()
-	io.SetPager("bat --style header,grid")
-	err := io.StartPager()
-	if err != nil {
-		return err
-	}
-	defer io.StopPager()
-	return f(io)
 }
 
 func init() {
@@ -43,11 +32,15 @@ func init() {
 	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Type, "type", "t", nil, "filter type")
 	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Status, "status", "s", nil, "filter status")
 	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Assignee, "assignee", "a", nil, "filter assignee")
+	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Component, "component", "c", nil, "filter component")
 	issue_listCmd.Flags().StringVarP(&issueListOpts.Query, "query", "q", "", "filter text")
 
 	issueCmd.AddCommand(issue_listCmd)
 
 	carapace.Gen(issue_listCmd).FlagCompletion(carapace.ActionMap{
+		"component": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionComponents(issue_listCmd, issueListOpts.Project).Invoke(c).Filter(c.Parts).ToA()
+		}),
 		"project": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionProjects(issue_listCmd).Invoke(c).Filter(c.Parts).ToA()
 		}),

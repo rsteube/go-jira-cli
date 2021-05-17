@@ -13,10 +13,16 @@ func NewClient(host string) (*jira.Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, ok := hosts[host]; !ok {
+	if auth, ok := hosts[host]; !ok {
 		return nil, errors.New("unknown host")
 	} else {
-		// TODO basic auth
+		if auth.User != "" && auth.Token != "" {
+			tp := &jira.BasicAuthTransport{
+				Username: auth.User,
+				Password: auth.Token,
+			}
+			return jira.NewClient(tp.Client(), "https://"+host)
+		}
 		return jira.NewClient(nil, "https://"+host)
 	}
 }

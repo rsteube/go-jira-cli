@@ -13,6 +13,7 @@ type ListIssuesOptions struct {
 	Status         []string
 	StatusCategory []string
 	Assignee       []string
+	Component      []string
 	Fields         []string
 	Query          string
 }
@@ -20,6 +21,9 @@ type ListIssuesOptions struct {
 func (o *ListIssuesOptions) Jql() string {
 	//project in (SZOPS, BA) AND issuetype in (Bug, CVE) AND status in ("In Progress", Reopened) AND assignee in (membersOf("Interner Benutzer"), membersOf(jira-developers))
 	jql := make([]string, 0)
+	if o.Component != nil && len(o.Component) > 0 {
+		jql = append(jql, fmt.Sprintf(`component in ('%v')`, strings.Join(o.Component, "','")))
+	}
 	if o.Project != nil && len(o.Project) > 0 {
 		jql = append(jql, fmt.Sprintf(`project in ('%v')`, strings.Join(o.Project, "','")))
 	}

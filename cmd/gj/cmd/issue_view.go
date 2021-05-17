@@ -10,6 +10,7 @@ import (
 	"github.com/rsteube/carapace"
 	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
 	"github.com/rsteube/go-jira-cli/internal/api"
+	"github.com/rsteube/go-jira-cli/internal/output"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,7 @@ var issue_viewCmd = &cobra.Command{
 			return err
 		}
 
-		return Pager(func(io *iostreams.IOStreams) error {
+		return output.Pager(func(io *iostreams.IOStreams) error {
 			description, err := markdown.Render(j2m.JiraToMD(issue.Fields.Description), "dark")
 			if err != nil {
 				return err
