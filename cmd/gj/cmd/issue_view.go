@@ -5,6 +5,8 @@ import (
 
 	"github.com/StevenACoffman/j2m"
 	"github.com/andygrunwald/go-jira"
+	"github.com/cli/cli/pkg/iostreams"
+	"github.com/cli/cli/pkg/markdown"
 	"github.com/rsteube/carapace"
 	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
 	"github.com/rsteube/go-jira-cli/internal/api"
@@ -23,17 +25,23 @@ var issue_viewCmd = &cobra.Command{
 			return err
 		}
 
-		fmt.Printf("%v %v %v %v\n%v\n", issue.Key, issue.Fields.Status.Name, issue.Fields.Type.Name, issue.Fields.Summary, j2m.JiraToMD(issue.Fields.Description))
-		return nil
+		return Pager(func(io *iostreams.IOStreams) error {
+			description, err := markdown.Render(j2m.JiraToMD(issue.Fields.Description), "dark")
+			if err != nil {
+				return err
+			}
+			fmt.Fprintf(io.Out, "%v %v %v %v\n%v\n", issue.Key, issue.Fields.Status.Name, issue.Fields.Type.Name, issue.Fields.Summary, description)
+			return nil
+		})
 	},
 }
 
 func init() {
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Project, "project", "p", nil, "filter project")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter project")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter project")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Assignee, "assignee", "a", nil, "filter project")
-	issue_viewCmd.Flags().StringVar(&issueViewOpts.Search, "search", "", "filter project")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter type")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter status")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Assignee, "assignee", "a", nil, "filter assignee")
+	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
 	issueCmd.AddCommand(issue_viewCmd)
 
 	carapace.Gen(issue_viewCmd).FlagCompletion(carapace.ActionMap{

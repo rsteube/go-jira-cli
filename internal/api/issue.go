@@ -14,7 +14,7 @@ type ListIssuesOptions struct {
 	StatusCategory []string
 	Assignee       []string
 	Fields         []string
-	Search         string
+	Query          string
 }
 
 func (o *ListIssuesOptions) Jql() string {
@@ -32,8 +32,8 @@ func (o *ListIssuesOptions) Jql() string {
 	if o.StatusCategory != nil && len(o.StatusCategory) > 0 {
 		jql = append(jql, fmt.Sprintf(`statusCategory in ('%v')`, strings.Join(o.StatusCategory, "','")))
 	}
-	if o.Search != "" {
-		jql = append(jql, fmt.Sprintf(`text ~ '%v'`, o.Search))
+	if o.Query != "" {
+		jql = append(jql, fmt.Sprintf(`text ~ '%v'`, o.Query))
 	}
 	return strings.Join(jql, " AND ") + " ORDER BY updated DESC" // TODO add as option
 }

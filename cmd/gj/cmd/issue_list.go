@@ -13,26 +13,37 @@ var issueListOpts api.ListIssuesOptions
 
 var issue_listCmd = &cobra.Command{
 	Use:   "list",
+	Args:  cobra.NoArgs,
 	Short: "",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		issueListOpts.Fields = []string{"key", "status", "type", "summary", "components", "updated"}
-		if len(args) > 0 {
-			issueListOpts.Search = args[0]
-		}
 		issues, err := api.ListIssues(cmd.Flag("host").Value.String(), &issueListOpts)
 		if err != nil {
 			return err
 		}
-
-		return output.PrintIssues(iostreams.System(), issues)
+		return Pager(func(io *iostreams.IOStreams) error {
+			return output.PrintIssues(io, issues)
+		})
 	},
+}
+
+func Pager(f func(io *iostreams.IOStreams) error) error {
+	io := iostreams.System()
+	io.SetPager("bat --style header,grid")
+	err := io.StartPager()
+	if err != nil {
+		return err
+	}
+	defer io.StopPager()
+	return f(io)
 }
 
 func init() {
 	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Project, "project", "p", nil, "filter project")
-	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Type, "type", "t", nil, "filter project")
-	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Status, "status", "s", nil, "filter project")
-	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Assignee, "assignee", "a", nil, "filter project")
+	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Type, "type", "t", nil, "filter type")
+	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Status, "status", "s", nil, "filter status")
+	issue_listCmd.Flags().StringSliceVarP(&issueListOpts.Assignee, "assignee", "a", nil, "filter assignee")
+	issue_listCmd.Flags().StringVarP(&issueListOpts.Query, "query", "q", "", "filter text")
 
 	issueCmd.AddCommand(issue_listCmd)
 
