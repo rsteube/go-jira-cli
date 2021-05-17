@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var issueViewOpts api.ListIssuesOptions
+
 var issue_viewCmd = &cobra.Command{
 	Use:   "view",
 	Short: "",
@@ -27,9 +29,26 @@ var issue_viewCmd = &cobra.Command{
 }
 
 func init() {
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Project, "project", "p", nil, "filter project")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter project")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter project")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Assignee, "assignee", "a", nil, "filter project")
+	issue_viewCmd.Flags().StringVar(&issueViewOpts.Search, "search", "", "filter project")
 	issueCmd.AddCommand(issue_viewCmd)
 
+	carapace.Gen(issue_viewCmd).FlagCompletion(carapace.ActionMap{
+		"project": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionProjects(issue_listCmd).Invoke(c).Filter(c.Parts).ToA()
+		}),
+		"status": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionStatuses(issue_listCmd).Invoke(c).Filter(c.Parts).ToA()
+		}),
+		"type": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionIssueTypes(issue_listCmd, issueViewOpts.Project).Invoke(c).Filter(c.Parts).ToA()
+		}),
+	})
+
 	carapace.Gen(issue_viewCmd).PositionalCompletion(
-		action.ActionIssues(issue_viewCmd),
+		action.ActionIssues(issue_viewCmd, &issueViewOpts),
 	)
 }

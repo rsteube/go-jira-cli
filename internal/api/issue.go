@@ -8,12 +8,13 @@ import (
 )
 
 type ListIssuesOptions struct {
-	Project  []string
-	Type     []string
-	Status   []string
-	Assignee []string
-	Fields   []string
-	Search   *string
+	Project        []string
+	Type           []string
+	Status         []string
+	StatusCategory []string
+	Assignee       []string
+	Fields         []string
+	Search         string
 }
 
 func (o *ListIssuesOptions) Jql() string {
@@ -28,7 +29,13 @@ func (o *ListIssuesOptions) Jql() string {
 	if o.Status != nil && len(o.Status) > 0 {
 		jql = append(jql, fmt.Sprintf(`status in ('%v')`, strings.Join(o.Status, "','")))
 	}
-	return strings.Join(jql, " AND ")
+	if o.StatusCategory != nil && len(o.StatusCategory) > 0 {
+		jql = append(jql, fmt.Sprintf(`statusCategory in ('%v')`, strings.Join(o.StatusCategory, "','")))
+	}
+	if o.Search != "" {
+		jql = append(jql, fmt.Sprintf(`text ~ '%v'`, o.Search))
+	}
+	return strings.Join(jql, " AND ") + " ORDER BY updated DESC" // TODO add as option
 }
 
 func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
