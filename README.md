@@ -13,6 +13,7 @@ WIP
 Host config with optional cookie value or user/token for basic auth (anonymous if none is set):
 
 ```sh
+#~/.config/gj/hosts.yaml
 issues.apache.org/jira:
   cookie:
   user:
