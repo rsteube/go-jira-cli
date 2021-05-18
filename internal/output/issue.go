@@ -5,13 +5,15 @@ import (
 	"strings"
 	"time"
 
+	"github.com/StevenACoffman/j2m"
 	"github.com/andygrunwald/go-jira"
 	"github.com/cli/cli/pkg/iostreams"
+	"github.com/cli/cli/pkg/markdown"
 	"github.com/cli/cli/pkg/text"
 	"github.com/cli/cli/utils"
 )
 
-func PrintIssues(io *iostreams.IOStreams, issues []jira.Issue) error {
+func PrintIssueList(io *iostreams.IOStreams, issues []jira.Issue) error {
 	printer := utils.NewTablePrinter(io)
 	colorScheme := io.ColorScheme()
 	for _, issue := range issues {
@@ -40,4 +42,59 @@ func PrintIssues(io *iostreams.IOStreams, issues []jira.Issue) error {
 		printer.EndRow()
 	}
 	return printer.Render()
+}
+
+func PrintIssue(io *iostreams.IOStreams, issue *jira.Issue, comments bool) error {
+	description, err := markdown.Render(j2m.JiraToMD(issue.Fields.Description), "dark") // TODO glamour style from config
+	if err != nil {
+		return err
+	}
+
+	components := make([]string, len(issue.Fields.Components))
+	for index, component := range issue.Fields.Components {
+		components[index] = component.Name
+	}
+
+	cs := io.ColorScheme()
+	fmt.Fprintf(io.Out, "%v %v [%v]\n%v %v • opened %v • %v comment(s)\nComponents: %v\nLabels: %v\n%v\n",
+		cs.Bold(issue.Key),
+		cs.Bold(issue.Fields.Summary),
+		cs.ColorFromString(strings.SplitN(issue.Fields.Priority.StatusColor, "-", 2)[0])(issue.Fields.Priority.Name),
+		cs.ColorFromString(strings.SplitN(issue.Fields.Status.StatusCategory.ColorName, "-", 2)[0])(issue.Fields.Status.Name),
+		issue.Fields.Type.Name,
+		utils.FuzzyAgo(time.Since(time.Time(issue.Fields.Created))),
+		len(issue.Fields.Comments.Comments),
+		cs.Gray(strings.Join(components, ", ")),
+		cs.Gray(strings.Join(issue.Fields.Labels, ", ")),
+		description)
+
+	for index, comment := range issue.Fields.Comments.Comments {
+		// TODO optimize
+		newest := ""
+		if index == len(issue.Fields.Comments.Comments)-1 {
+			newest = fmt.Sprintf(" • %v", cs.Cyan("Newest comment"))
+		} else if !comments {
+			continue
+		}
+
+		body, err := markdown.Render(j2m.JiraToMD(comment.Body), "dark") // TODO glamour style from config
+		if err != nil {
+			return err
+		}
+
+		updated, err := time.Parse("2006-01-02T15:04:05Z0700", comment.Updated)
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(io.Out, "%v • %v%v\n%v\n",
+			cs.Bold(comment.Author.DisplayName),
+			utils.FuzzyAgo(time.Since(time.Time(updated))),
+			newest,
+			body,
+		)
+	}
+
+	return nil
+
 }
