@@ -66,7 +66,7 @@ var issue_viewCmd = &cobra.Command{
 						io.ColorScheme().Bold(issue.Key),
 						io.ColorScheme().Bold(issue.Fields.Summary),
 						io.ColorScheme().Gray(issue.Fields.Priority.Name),
-						io.ColorScheme().ColorFromString(issue.Fields.Status.StatusCategory.ColorName)(issue.Fields.Status.Name),
+						io.ColorScheme().ColorFromString(strings.SplitN(issue.Fields.Status.StatusCategory.ColorName, "-", 2)[0])(issue.Fields.Status.Name),
 						issue.Fields.Type.Name,
 						utils.FuzzyAgo(time.Since(time.Time(issue.Fields.Created))),
 						len(issue.Fields.Comments.Comments),
