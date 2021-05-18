@@ -16,12 +16,16 @@ type ListIssuesOptions struct {
 	Component      []string
 	Priority       []string
 	Fields         []string
+	Jql           string
 	Query          string
 }
 
-func (o *ListIssuesOptions) Jql() string {
+func (o *ListIssuesOptions) toJql() string {
 	//project in (SZOPS, BA) AND issuetype in (Bug, CVE) AND status in ("In Progress", Reopened) AND assignee in (membersOf("Interner Benutzer"), membersOf(jira-developers))
 	jql := make([]string, 0)
+	if o.Jql != "" {
+		jql = append(jql, o.Jql)
+	}
 	if o.Component != nil && len(o.Component) > 0 {
 		jql = append(jql, fmt.Sprintf(`component in ('%v')`, strings.Join(o.Component, "','")))
 	}
@@ -51,7 +55,23 @@ func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
 	if err != nil {
 		return nil, ApiError(err)
 	}
-	issues, _, err := client.Issue.Search(opts.Jql(), &jira.SearchOptions{Fields: opts.Fields})
+	issues, _, err := client.Issue.Search(opts.toJql(), &jira.SearchOptions{Fields: opts.Fields})
+	return issues, ApiError(err)
+}
+
+func ListIssuesByFilter(host string, filterID int, fields []string) ([]jira.Issue, error) {
+	client, err := NewClient(host)
+	if err != nil {
+		return nil, ApiError(err)
+	}
+	filter, err := GetFilter(host, filterID)
+	if err != nil {
+		return nil, ApiError(err)
+	}
+	if !strings.Contains(filter.Jql, "ORDER") {
+		filter.Jql = filter.Jql + " ORDER BY updated DESC"
+	}
+	issues, _, err := client.Issue.Search(filter.Jql, &jira.SearchOptions{Fields: fields})
 	return issues, ApiError(err)
 }
 

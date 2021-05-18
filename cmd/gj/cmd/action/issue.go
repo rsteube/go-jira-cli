@@ -22,3 +22,19 @@ func ActionIssues(cmd *cobra.Command, opts *api.ListIssuesOptions) carapace.Acti
 		}
 	})
 }
+
+func ActionIssuesByFilter(cmd *cobra.Command, filterID int) carapace.Action {
+	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		host := cmd.Flag("host").Value.String()
+
+		if issues, err := api.ListIssuesByFilter(host, filterID, []string{"key", "summary"}); err != nil {
+			return carapace.ActionMessage(err.Error())
+		} else {
+			vals := make([]string, 0)
+			for _, issue := range issues {
+				vals = append(vals, issue.Key, issue.Fields.Summary)
+			}
+			return carapace.ActionValuesDescribed(vals...)
+		}
+	})
+}

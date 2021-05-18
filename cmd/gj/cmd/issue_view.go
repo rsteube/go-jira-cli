@@ -80,6 +80,7 @@ func init() {
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Component, "component", "c", nil, "filter component")
 	issue_viewCmd.Flags().StringSliceVar(&issueViewOpts.Priority, "priority", nil, "filter priority")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
+	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Jql, "jql", "j", "", "custom jql")
 	issue_viewCmd.Flags().Bool("web", false, "view in browser")
 	issueCmd.AddCommand(issue_viewCmd)
 
