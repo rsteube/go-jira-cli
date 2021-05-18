@@ -73,23 +73,27 @@ var issue_viewCmd = &cobra.Command{
 }
 
 func init() {
+	issue_viewCmd.Flags().Bool("web", false, "view in browser")
 	issue_viewCmd.Flags().IntVarP(&issueViewOpts.Filter, "filter", "f", -1, "predefined filter")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Project, "project", "p", nil, "filter project")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter type")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter status")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Assignee, "assignee", "a", nil, "filter assignee")
-	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Component, "component", "c", nil, "filter component")
+	issue_viewCmd.Flags().IntVarP(&issueViewOpts.Limit, "limit", "l", 50, "limit results (default: 50)")
 	issue_viewCmd.Flags().StringSliceVar(&issueViewOpts.Label, "label", nil, "filter label")
 	issue_viewCmd.Flags().StringSliceVar(&issueViewOpts.Priority, "priority", nil, "filter priority")
-	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Assignee, "assignee", "a", nil, "filter assignee")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Component, "component", "c", nil, "filter component")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Project, "project", "p", nil, "filter project")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Resolution, "resolution", "r", nil, "filter resolution")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter status")
+	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter type")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Jql, "jql", "j", "", "custom jql")
-	issue_viewCmd.Flags().IntVarP(&issueViewOpts.Limit, "limit", "l", 50, "limit results (default: 50)")
-	issue_viewCmd.Flags().Bool("web", false, "view in browser")
+	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
 	issueCmd.AddCommand(issue_viewCmd)
 
 	carapace.Gen(issue_viewCmd).FlagCompletion(carapace.ActionMap{
 		"component": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionComponents(issue_viewCmd, issueViewOpts.Project).Invoke(c).Filter(c.Parts).ToA()
+		}),
+		"resolution": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionResolutions(issue_viewCmd).Invoke(c).Filter(c.Parts).ToA()
 		}),
 		"priority": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionPriorities(issue_viewCmd).Invoke(c).Filter(c.Parts).ToA()

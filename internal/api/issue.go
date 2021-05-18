@@ -16,6 +16,7 @@ type ListIssuesOptions struct {
 	Component      []string
 	Label          []string
 	Priority       []string
+	Resolution     []string
 	Fields         []string
 	Filter         int
 	Jql            string
@@ -39,28 +40,31 @@ func (o *ListIssuesOptions) toJql(host string) (string, error) {
 		jql = append(jql, o.Jql)
 	}
 	if o.Component != nil && len(o.Component) > 0 {
-		jql = append(jql, fmt.Sprintf(`component in ('%v')`, strings.Join(o.Component, "','")))
+		jql = append(jql, fmt.Sprintf(`component in ("%v")`, strings.Join(o.Component, `","`)))
 	}
 	if o.Label != nil && len(o.Label) > 0 {
-		jql = append(jql, fmt.Sprintf(`labels in ('%v')`, strings.Join(o.Label, "','")))
+		jql = append(jql, fmt.Sprintf(`labels in ("%v")`, strings.Join(o.Label, `","`)))
 	}
 	if o.Priority != nil && len(o.Priority) > 0 {
-		jql = append(jql, fmt.Sprintf(`priority in ('%v')`, strings.Join(o.Priority, "','")))
+		jql = append(jql, fmt.Sprintf(`priority in ("%v")`, strings.Join(o.Priority, `","`)))
 	}
 	if o.Project != nil && len(o.Project) > 0 {
-		jql = append(jql, fmt.Sprintf(`project in ('%v')`, strings.Join(o.Project, "','")))
+		jql = append(jql, fmt.Sprintf(`project in ("%v")`, strings.Join(o.Project, `","`)))
 	}
 	if o.Type != nil && len(o.Type) > 0 {
-		jql = append(jql, fmt.Sprintf(`type in ('%v')`, strings.Join(o.Type, "','")))
+		jql = append(jql, fmt.Sprintf(`type in ("%v")`, strings.Join(o.Type, `","`)))
+	}
+	if o.Resolution != nil && len(o.Resolution) > 0 {
+		jql = append(jql, fmt.Sprintf(`resolution in ("%v")`, strings.Join(o.Resolution, `","`)))
 	}
 	if o.Status != nil && len(o.Status) > 0 {
-		jql = append(jql, fmt.Sprintf(`status in ('%v')`, strings.Join(o.Status, "','")))
+		jql = append(jql, fmt.Sprintf(`status in ("%v")`, strings.Join(o.Status, `","`)))
 	}
 	if o.StatusCategory != nil && len(o.StatusCategory) > 0 {
-		jql = append(jql, fmt.Sprintf(`statusCategory in ('%v')`, strings.Join(o.StatusCategory, "','")))
+		jql = append(jql, fmt.Sprintf(`statusCategory in ("%v")`, strings.Join(o.StatusCategory, `","`)))
 	}
 	if o.Query != "" {
-		jql = append(jql, fmt.Sprintf(`text ~ '%v'`, o.Query))
+		jql = append(jql, fmt.Sprintf(`text ~ "%v"`, o.Query))
 	}
 	result := strings.Join(jql, " AND ")
 	if !strings.Contains(result, "ORDER") {
