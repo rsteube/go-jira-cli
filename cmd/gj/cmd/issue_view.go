@@ -62,17 +62,46 @@ var issue_viewCmd = &cobra.Command{
 						components[index] = component.Name
 					}
 
+					cs := io.ColorScheme()
 					fmt.Fprintf(io.Out, "%v %v [%v]\n%v %v • opened %v • %v comment(s)\nComponents: %v\nLabels: %v\n%v\n",
-						io.ColorScheme().Bold(issue.Key),
-						io.ColorScheme().Bold(issue.Fields.Summary),
-                        io.ColorScheme().ColorFromString(strings.SplitN(issue.Fields.Priority.StatusColor, "-", 2)[0])(issue.Fields.Priority.Name),
-						io.ColorScheme().ColorFromString(strings.SplitN(issue.Fields.Status.StatusCategory.ColorName, "-", 2)[0])(issue.Fields.Status.Name),
+						cs.Bold(issue.Key),
+						cs.Bold(issue.Fields.Summary),
+						cs.ColorFromString(strings.SplitN(issue.Fields.Priority.StatusColor, "-", 2)[0])(issue.Fields.Priority.Name),
+						cs.ColorFromString(strings.SplitN(issue.Fields.Status.StatusCategory.ColorName, "-", 2)[0])(issue.Fields.Status.Name),
 						issue.Fields.Type.Name,
 						utils.FuzzyAgo(time.Since(time.Time(issue.Fields.Created))),
 						len(issue.Fields.Comments.Comments),
-						io.ColorScheme().Gray(strings.Join(components, ", ")),
-						io.ColorScheme().Gray(strings.Join(issue.Fields.Labels, ", ")),
+						cs.Gray(strings.Join(components, ", ")),
+						cs.Gray(strings.Join(issue.Fields.Labels, ", ")),
 						description)
+
+					for index, comment := range issue.Fields.Comments.Comments {
+						// TODO optimize
+						newest := ""
+						if index == len(issue.Fields.Comments.Comments)-1 {
+							newest = fmt.Sprintf(" • %v", cs.Cyan("Newest comment"))
+						} else if !cmd.Flag("comments").Changed {
+							continue
+						}
+
+						body, err := markdown.Render(j2m.JiraToMD(comment.Body), "dark") // TODO glamour style from config
+						if err != nil {
+							return err
+						}
+
+						updated, err := time.Parse("2006-01-02T15:04:05Z0700", comment.Updated)
+						if err != nil {
+							return err
+						}
+
+						fmt.Fprintf(io.Out, "%v • %v%v\n%v\n",
+							cs.Bold(comment.Author.DisplayName),
+							utils.FuzzyAgo(time.Since(time.Time(updated))),
+							newest,
+							body,
+						)
+					}
+
 					return nil
 				})
 			}
@@ -81,6 +110,7 @@ var issue_viewCmd = &cobra.Command{
 }
 
 func init() {
+	issue_viewCmd.Flags().Bool("comments", false, "fiew issue comments")
 	issueCmd.AddCommand(issue_viewCmd)
 
 	carapace.Gen(issue_viewCmd).PositionalCompletion(
