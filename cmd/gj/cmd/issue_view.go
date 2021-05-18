@@ -79,6 +79,7 @@ func init() {
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter status")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Assignee, "assignee", "a", nil, "filter assignee")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Component, "component", "c", nil, "filter component")
+	issue_viewCmd.Flags().StringSliceVar(&issueViewOpts.Label, "label", nil, "filter label")
 	issue_viewCmd.Flags().StringSliceVar(&issueViewOpts.Priority, "priority", nil, "filter priority")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Jql, "jql", "j", "", "custom jql")

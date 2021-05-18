@@ -14,6 +14,7 @@ type ListIssuesOptions struct {
 	StatusCategory []string
 	Assignee       []string
 	Component      []string
+	Label          []string
 	Priority       []string
 	Fields         []string
 	Filter         int
@@ -39,6 +40,9 @@ func (o *ListIssuesOptions) toJql(host string) (string, error) {
 	}
 	if o.Component != nil && len(o.Component) > 0 {
 		jql = append(jql, fmt.Sprintf(`component in ('%v')`, strings.Join(o.Component, "','")))
+	}
+	if o.Label != nil && len(o.Label) > 0 {
+		jql = append(jql, fmt.Sprintf(`labels in ('%v')`, strings.Join(o.Label, "','")))
 	}
 	if o.Priority != nil && len(o.Priority) > 0 {
 		jql = append(jql, fmt.Sprintf(`priority in ('%v')`, strings.Join(o.Priority, "','")))
