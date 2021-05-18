@@ -8,6 +8,13 @@ Simple [Jira](https://www.atlassian.com/software/jira) terminal client based on 
 
 WIP
 
+## Example
+
+```sh
+docker-compose run --rm gj
+gj issue view --host <TAB>
+``
+
 ## Getting Started
 
 Host config with optional cookie value or user/token for basic auth (anonymous if none is set):
