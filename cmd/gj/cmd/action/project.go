@@ -6,14 +6,12 @@ import (
 	"github.com/rsteube/carapace"
 	"github.com/rsteube/carapace/pkg/cache"
 	"github.com/rsteube/go-jira-cli/internal/api"
-	"github.com/spf13/cobra"
 )
 
-func ActionProjects(cmd *cobra.Command) carapace.Action {
+func ActionProjects(host *string) carapace.Action {
 	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-		host := cmd.Flag("host").Value.String()
 		return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-			if projects, err := api.ListProjects(host); err != nil {
+			if projects, err := api.ListProjects(*host); err != nil {
 				return carapace.ActionMessage(err.Error())
 			} else {
 				vals := make([]string, 0)
@@ -22,6 +20,6 @@ func ActionProjects(cmd *cobra.Command) carapace.Action {
 				}
 				return carapace.ActionValuesDescribed(vals...)
 			}
-		}).Cache(1*time.Hour, cache.String(host))
+		}).Cache(1*time.Hour, cache.String(*host))
 	})
 }

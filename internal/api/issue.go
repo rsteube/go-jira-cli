@@ -8,6 +8,7 @@ import (
 )
 
 type ListIssuesOptions struct {
+    Host           string
 	Project        []string
 	Type           []string
 	Status         []string
@@ -24,12 +25,12 @@ type ListIssuesOptions struct {
 	Limit          int
 }
 
-func (o *ListIssuesOptions) ToJql(host string) (string, error) {
+func (o *ListIssuesOptions) ToJql() (string, error) {
 	//project in (SZOPS, BA) AND issuetype in (Bug, CVE) AND status in ("In Progress", Reopened) AND assignee in (membersOf("Interner Benutzer"), membersOf(jira-developers))
 	jql := make([]string, 0)
 
 	if o.Filter > 0 {
-		filter, err := GetFilter(host, o.Filter)
+		filter, err := GetFilter(o.Host, o.Filter)
 		if err != nil {
 			return "", err
 		}
@@ -76,12 +77,12 @@ func (o *ListIssuesOptions) ToJql(host string) (string, error) {
 	return result, nil
 }
 
-func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
-	client, err := NewClient(host)
+func ListIssues(opts *ListIssuesOptions) ([]jira.Issue, error) {
+	client, err := NewClient(opts.Host)
 	if err != nil {
 		return nil, ApiError(err)
 	}
-	jql, err := opts.ToJql(host)
+	jql, err := opts.ToJql()
 	if err != nil {
 		return nil, err
 	}
