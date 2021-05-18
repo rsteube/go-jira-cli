@@ -9,8 +9,9 @@ import (
 )
 
 type HostConfig struct {
-	User  string
-	Token string
+	User   string
+	Token  string
+	Cookie string
 }
 
 func Hosts() (config map[string]HostConfig, err error) {

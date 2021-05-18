@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"net/http"
 	"strings"
 
 	"github.com/andygrunwald/go-jira"
@@ -20,6 +21,18 @@ func NewClient(host string) (*jira.Client, error) {
 			tp := &jira.BasicAuthTransport{
 				Username: auth.User,
 				Password: auth.Token,
+			}
+			return jira.NewClient(tp.Client(), "https://"+host)
+		}
+		if auth.Cookie != "" {
+			sessionObject := make([]*http.Cookie, 0)
+			for _, cookie := range strings.Split(auth.Cookie, ";") {
+				splitted := strings.SplitN(strings.TrimSpace(cookie), "=", 2)
+				sessionObject = append(sessionObject, &http.Cookie{Name: splitted[0], Value: splitted[1]})
+			}
+
+			tp := jira.CookieAuthTransport{
+				SessionObject: sessionObject,
 			}
 			return jira.NewClient(tp.Client(), "https://"+host)
 		}
