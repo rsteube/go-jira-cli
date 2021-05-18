@@ -13,7 +13,7 @@ func ActionPriorities(cmd *cobra.Command) carapace.Action {
 	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 		host := cmd.Flag("host").Value.String()
 
-        return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			if priorities, err := api.ListPriorities(host); err != nil {
 				return carapace.ActionMessage(err.Error())
 			} else {

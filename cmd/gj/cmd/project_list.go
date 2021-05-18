@@ -9,7 +9,7 @@ import (
 
 var project_listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "",
+	Short: "list projects",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projects, err := api.ListProjects(cmd.Flag("host").Value.String())
 		if err != nil {

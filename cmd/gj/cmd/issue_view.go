@@ -22,7 +22,7 @@ var issueViewOpts api.ListIssuesOptions
 
 var issue_viewCmd = &cobra.Command{
 	Use:   "view",
-	Short: "",
+	Short: "list/view issues",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 { // list issues
@@ -54,15 +54,16 @@ var issue_viewCmd = &cobra.Command{
 						components[index] = component.Name
 					}
 
-					fmt.Fprintf(io.Out, "%v %v\n%v %v • opened %v • %v comment(s)\nComponents: %v\nLabels: %v\n%v\n",
+					fmt.Fprintf(io.Out, "%v %v [%v]\n%v %v • opened %v • %v comment(s)\nComponents: %v\nLabels: %v\n%v\n",
 						io.ColorScheme().Bold(issue.Key),
 						io.ColorScheme().Bold(issue.Fields.Summary),
+						io.ColorScheme().Gray(issue.Fields.Priority.Name),
 						io.ColorScheme().ColorFromString(issue.Fields.Status.StatusCategory.ColorName)(issue.Fields.Status.Name),
 						issue.Fields.Type.Name,
 						utils.FuzzyAgo(time.Since(time.Time(issue.Fields.Created))),
 						len(issue.Fields.Comments.Comments),
-						strings.Join(components, ","),
-						strings.Join(issue.Fields.Labels, ","),
+						io.ColorScheme().Gray(strings.Join(components, ", ")),
+						io.ColorScheme().Gray(strings.Join(issue.Fields.Labels, ", ")),
 						description)
 					return nil
 				})
