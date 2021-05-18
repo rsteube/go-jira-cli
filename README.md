@@ -13,7 +13,7 @@ WIP
 ```sh
 docker-compose run --rm gj
 gj issue view --host <TAB>
-``
+```
 
 ## Getting Started
 
