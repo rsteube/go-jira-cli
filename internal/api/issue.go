@@ -19,6 +19,7 @@ type ListIssuesOptions struct {
 	Filter         int
 	Jql            string
 	Query          string
+	Limit          int
 }
 
 func (o *ListIssuesOptions) toJql(host string) (string, error) {
@@ -74,8 +75,23 @@ func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
 		return nil, err
 	}
 
-	issues, _, err := client.Issue.Search(jql, &jira.SearchOptions{Fields: opts.Fields})
-	return issues, ApiError(err)
+	if opts.Limit <= 0 {
+		opts.Limit = 50
+	}
+
+	issues := make([]jira.Issue, 0)
+	for i := opts.Limit; i > 0; i = i - 50 {
+		maxResults := 50
+		if i < 50 {
+			maxResults = i % 50
+		}
+		issuesPage, _, err := client.Issue.Search(jql, &jira.SearchOptions{Fields: opts.Fields, MaxResults: maxResults})
+		if err != nil {
+			return nil, ApiError(err)
+		}
+		issues = append(issues, issuesPage...)
+	}
+	return issues, nil
 }
 
 func GetIssue(host string, issueID string, opts *jira.GetQueryOptions) (*jira.Issue, error) {

@@ -73,7 +73,7 @@ var issue_viewCmd = &cobra.Command{
 }
 
 func init() {
-	issue_viewCmd.Flags().IntVarP(&issueViewOpts.Filter, "filter", "f", -1, "filter favorite")
+	issue_viewCmd.Flags().IntVarP(&issueViewOpts.Filter, "filter", "f", -1, "predefined filter")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Project, "project", "p", nil, "filter project")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter type")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter status")
@@ -82,6 +82,7 @@ func init() {
 	issue_viewCmd.Flags().StringSliceVar(&issueViewOpts.Priority, "priority", nil, "filter priority")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Jql, "jql", "j", "", "custom jql")
+	issue_viewCmd.Flags().IntVarP(&issueViewOpts.Limit, "limit", "l", 50, "limit results (default: 50)")
 	issue_viewCmd.Flags().Bool("web", false, "view in browser")
 	issueCmd.AddCommand(issue_viewCmd)
 
