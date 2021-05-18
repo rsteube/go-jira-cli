@@ -65,7 +65,7 @@ var issue_viewCmd = &cobra.Command{
 					fmt.Fprintf(io.Out, "%v %v [%v]\n%v %v • opened %v • %v comment(s)\nComponents: %v\nLabels: %v\n%v\n",
 						io.ColorScheme().Bold(issue.Key),
 						io.ColorScheme().Bold(issue.Fields.Summary),
-						io.ColorScheme().Gray(issue.Fields.Priority.Name),
+                        io.ColorScheme().ColorFromString(strings.SplitN(issue.Fields.Priority.StatusColor, "-", 2)[0])(issue.Fields.Priority.Name),
 						io.ColorScheme().ColorFromString(strings.SplitN(issue.Fields.Status.StatusCategory.ColorName, "-", 2)[0])(issue.Fields.Status.Name),
 						issue.Fields.Type.Name,
 						utils.FuzzyAgo(time.Since(time.Time(issue.Fields.Created))),
