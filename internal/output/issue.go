@@ -1,11 +1,13 @@
 package output
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/cli/cli/pkg/iostreams"
+	"github.com/cli/cli/pkg/text"
 	"github.com/cli/cli/utils"
 )
 
@@ -22,7 +24,16 @@ func PrintIssues(io *iostreams.IOStreams, issues []jira.Issue) error {
 		for index, component := range issue.Fields.Components {
 			components[index] = component.Name
 		}
-		printer.AddField(strings.Join(components, ", "), nil, colorScheme.Gray)
+		componentsText := strings.Join(components, ", ")
+		if len(components) > 0 {
+			componentsText = fmt.Sprintf("(%v)", componentsText)
+		}
+		printer.AddField(componentsText, func(i int, s string) string {
+			if len(s) < 2 {
+				return s
+			}
+			return fmt.Sprintf("(%v)", text.Truncate(i-2, s[1:len(s)-1]))
+		}, colorScheme.Gray)
 
 		ago := utils.FuzzyAgo(time.Since(time.Time(issue.Fields.Updated)))
 		printer.AddField(ago, nil, colorScheme.Gray)
