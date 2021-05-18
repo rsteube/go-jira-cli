@@ -14,6 +14,7 @@ type ListIssuesOptions struct {
 	StatusCategory []string
 	Assignee       []string
 	Component      []string
+	Priority       []string
 	Fields         []string
 	Query          string
 }
@@ -23,6 +24,9 @@ func (o *ListIssuesOptions) Jql() string {
 	jql := make([]string, 0)
 	if o.Component != nil && len(o.Component) > 0 {
 		jql = append(jql, fmt.Sprintf(`component in ('%v')`, strings.Join(o.Component, "','")))
+	}
+	if o.Priority != nil && len(o.Priority) > 0 {
+		jql = append(jql, fmt.Sprintf(`priority in ('%v')`, strings.Join(o.Priority, "','")))
 	}
 	if o.Project != nil && len(o.Project) > 0 {
 		jql = append(jql, fmt.Sprintf(`project in ('%v')`, strings.Join(o.Project, "','")))
