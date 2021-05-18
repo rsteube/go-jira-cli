@@ -24,7 +24,7 @@ type ListIssuesOptions struct {
 	Limit          int
 }
 
-func (o *ListIssuesOptions) toJql(host string) (string, error) {
+func (o *ListIssuesOptions) ToJql(host string) (string, error) {
 	//project in (SZOPS, BA) AND issuetype in (Bug, CVE) AND status in ("In Progress", Reopened) AND assignee in (membersOf("Interner Benutzer"), membersOf(jira-developers))
 	jql := make([]string, 0)
 
@@ -78,7 +78,7 @@ func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
 	if err != nil {
 		return nil, ApiError(err)
 	}
-	jql, err := opts.toJql(host)
+	jql, err := opts.ToJql(host)
 	if err != nil {
 		return nil, err
 	}

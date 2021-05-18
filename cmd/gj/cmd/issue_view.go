@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 
@@ -26,12 +27,22 @@ var issue_viewCmd = &cobra.Command{
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 { // list issues
+			host := cmd.Flag("host").Value.String()
+			if cmd.Flag("web").Changed { // open in browser
+				jql, err := issueViewOpts.ToJql(host)
+				if err != nil {
+					return err
+				}
+				return browser.OpenURL(fmt.Sprintf("https://%v/issues/?jql=%v", host, url.QueryEscape(jql)))
+			}
+
 			issueViewOpts.Fields = []string{"key", "status", "type", "summary", "components", "updated"}
 			issues, err := api.ListIssues(cmd.Flag("host").Value.String(), &issueViewOpts)
 			if err != nil {
 				return err
 			}
 			return output.Pager(func(io *iostreams.IOStreams) error {
+
 				return output.PrintIssues(io, issues)
 			})
 		} else { // view issue
