@@ -2,11 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/StevenACoffman/j2m"
 	"github.com/andygrunwald/go-jira"
 	"github.com/cli/cli/pkg/iostreams"
 	"github.com/cli/cli/pkg/markdown"
+	"github.com/cli/cli/utils"
 	"github.com/rsteube/carapace"
 	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
 	"github.com/rsteube/go-jira-cli/internal/api"
@@ -31,19 +33,28 @@ var issue_viewCmd = &cobra.Command{
 				return output.PrintIssues(io, issues)
 			})
 		} else { // view issue
-			issue, err := api.GetIssue(cmd.Flag("host").Value.String(), args[0], &jira.GetQueryOptions{})
-			if err != nil {
-				return err
-			}
-
-			return output.Pager(func(io *iostreams.IOStreams) error {
-				description, err := markdown.Render(j2m.JiraToMD(issue.Fields.Description), "dark")
+			if cmd.Flag("web").Changed { // open in browser
+				openURL := fmt.Sprintf("https://%v/browse/%v", cmd.Flag("host").Value.String(), args[0])
+				io := iostreams.System()
+				if io.IsStdoutTTY() {
+					fmt.Fprintf(io.ErrOut, "Opening %s in your browser.\n", utils.DisplayURL(openURL))
+				}
+				return output.NewBrowser(os.Getenv("BROWSER"), io.Out, io.ErrOut).Browse(openURL)
+			} else {
+				issue, err := api.GetIssue(cmd.Flag("host").Value.String(), args[0], &jira.GetQueryOptions{})
 				if err != nil {
 					return err
 				}
-				fmt.Fprintf(io.Out, "%v %v %v %v\n%v\n", issue.Key, issue.Fields.Status.Name, issue.Fields.Type.Name, issue.Fields.Summary, description)
-				return nil
-			})
+
+				return output.Pager(func(io *iostreams.IOStreams) error {
+					description, err := markdown.Render(j2m.JiraToMD(issue.Fields.Description), "dark") // TODO glamour style from config
+					if err != nil {
+						return err
+					}
+					fmt.Fprintf(io.Out, "%v %v %v %v\n%v\n", issue.Key, issue.Fields.Status.Name, issue.Fields.Type.Name, issue.Fields.Summary, description)
+					return nil
+				})
+			}
 		}
 	},
 }
@@ -55,6 +66,7 @@ func init() {
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Assignee, "assignee", "a", nil, "filter assignee")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Component, "component", "c", nil, "filter component")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
+	issue_viewCmd.Flags().Bool("web", false, "view in browser")
 	issueCmd.AddCommand(issue_viewCmd)
 
 	carapace.Gen(issue_viewCmd).FlagCompletion(carapace.ActionMap{
