@@ -1,16 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-	"net/url"
-
-	"github.com/cli/browser"
-	"github.com/cli/cli/pkg/iostreams"
 	"github.com/rsteube/carapace"
 	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
 	"github.com/rsteube/go-jira-cli/internal/api"
 	"github.com/rsteube/go-jira-cli/internal/config"
-	"github.com/rsteube/go-jira-cli/internal/output"
 	"github.com/spf13/cobra"
 )
 
@@ -20,23 +14,7 @@ var issueCmd = &cobra.Command{
 	Use:   "issue",
 	Short: "",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if cmd.Flag("web").Changed { // open in browser
-			jql, err := issueOpts.ToJql()
-			if err != nil {
-				return err
-			}
-			return browser.OpenURL(fmt.Sprintf("https://%v/issues/?jql=%v", issueOpts.Host, url.QueryEscape(jql)))
-		}
-
-		issueOpts.Fields = []string{"key", "status", "type", "summary", "components", "updated"}
-		issues, err := api.ListIssues(&issueOpts)
-		if err != nil {
-			return err
-		}
-		return output.Pager(func(io *iostreams.IOStreams) error {
-
-			return output.PrintIssues(io, issues)
-		})
+		return issue_viewCmd.RunE(issue_viewCmd, []string{})
 	},
 }
 

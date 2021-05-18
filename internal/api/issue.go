@@ -8,7 +8,7 @@ import (
 )
 
 type ListIssuesOptions struct {
-    Host           string
+	Host           string
 	Project        []string
 	Type           []string
 	Status         []string
