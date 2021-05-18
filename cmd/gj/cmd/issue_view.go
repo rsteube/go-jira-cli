@@ -101,6 +101,9 @@ func init() {
 	issueCmd.AddCommand(issue_viewCmd)
 
 	carapace.Gen(issue_viewCmd).FlagCompletion(carapace.ActionMap{
+		"assignee": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionUsers(issue_viewCmd).Invoke(c).Filter(c.Parts).ToA() // TODO assignable users
+		}),
 		"component": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionComponents(issue_viewCmd, issueViewOpts.Project).Invoke(c).Filter(c.Parts).ToA()
 		}),

@@ -39,6 +39,9 @@ func (o *ListIssuesOptions) ToJql(host string) (string, error) {
 	if o.Jql != "" {
 		jql = append(jql, o.Jql)
 	}
+	if o.Assignee != nil && len(o.Assignee) > 0 {
+		jql = append(jql, fmt.Sprintf(`assignee in ("%v")`, strings.Join(o.Assignee, `","`)))
+	}
 	if o.Component != nil && len(o.Component) > 0 {
 		jql = append(jql, fmt.Sprintf(`component in ("%v")`, strings.Join(o.Component, `","`)))
 	}
