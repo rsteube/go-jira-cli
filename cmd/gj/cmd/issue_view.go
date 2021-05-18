@@ -94,6 +94,7 @@ func init() {
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Project, "project", "p", nil, "filter project")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Resolution, "resolution", "r", nil, "filter resolution")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter status")
+	issue_viewCmd.Flags().StringSliceVar(&issueViewOpts.StatusCategory, "status-category", nil, "filter status-category")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter type")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Jql, "jql", "j", "", "custom jql")
 	issue_viewCmd.Flags().StringVarP(&issueViewOpts.Query, "query", "q", "", "filter text")
@@ -114,6 +115,9 @@ func init() {
 		}),
 		"status": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionStatuses(issue_viewCmd).Invoke(c).Filter(c.Parts).ToA()
+		}),
+		"status-category": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionStatusCategories(issue_viewCmd).Invoke(c).Filter(c.Parts).ToA()
 		}),
 		"type": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionIssueTypes(issue_viewCmd, issueViewOpts.Project).Invoke(c).Filter(c.Parts).ToA()
