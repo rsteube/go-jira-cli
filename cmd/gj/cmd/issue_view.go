@@ -73,6 +73,7 @@ var issue_viewCmd = &cobra.Command{
 }
 
 func init() {
+	issue_viewCmd.Flags().IntVarP(&issueViewOpts.Filter, "filter", "f", -1, "filter favorite")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Project, "project", "p", nil, "filter project")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Type, "type", "t", nil, "filter type")
 	issue_viewCmd.Flags().StringSliceVarP(&issueViewOpts.Status, "status", "s", nil, "filter status")
@@ -100,6 +101,7 @@ func init() {
 		"type": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionIssueTypes(issue_viewCmd, issueViewOpts.Project).Invoke(c).Filter(c.Parts).ToA()
 		}),
+		"filter": action.ActionFilters(issue_viewCmd),
 	})
 
 	carapace.Gen(issue_viewCmd).PositionalCompletion(

@@ -16,13 +16,23 @@ type ListIssuesOptions struct {
 	Component      []string
 	Priority       []string
 	Fields         []string
-	Jql           string
+	Filter         int
+	Jql            string
 	Query          string
 }
 
-func (o *ListIssuesOptions) toJql() string {
+func (o *ListIssuesOptions) toJql(host string) (string, error) {
 	//project in (SZOPS, BA) AND issuetype in (Bug, CVE) AND status in ("In Progress", Reopened) AND assignee in (membersOf("Interner Benutzer"), membersOf(jira-developers))
 	jql := make([]string, 0)
+
+	if o.Filter > 0 {
+		filter, err := GetFilter(host, o.Filter)
+		if err != nil {
+			return "", err
+		}
+		jql = append(jql, filter.Jql)
+	}
+
 	if o.Jql != "" {
 		jql = append(jql, o.Jql)
 	}
@@ -47,7 +57,11 @@ func (o *ListIssuesOptions) toJql() string {
 	if o.Query != "" {
 		jql = append(jql, fmt.Sprintf(`text ~ '%v'`, o.Query))
 	}
-	return strings.Join(jql, " AND ") + " ORDER BY updated DESC" // TODO add as option
+	result := strings.Join(jql, " AND ")
+	if !strings.Contains(result, "ORDER") {
+		result = result + " ORDER BY updated DESC"
+	}
+	return result, nil
 }
 
 func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
@@ -55,23 +69,12 @@ func ListIssues(host string, opts *ListIssuesOptions) ([]jira.Issue, error) {
 	if err != nil {
 		return nil, ApiError(err)
 	}
-	issues, _, err := client.Issue.Search(opts.toJql(), &jira.SearchOptions{Fields: opts.Fields})
-	return issues, ApiError(err)
-}
+	jql, err := opts.toJql(host)
+	if err != nil {
+		return nil, err
+	}
 
-func ListIssuesByFilter(host string, filterID int, fields []string) ([]jira.Issue, error) {
-	client, err := NewClient(host)
-	if err != nil {
-		return nil, ApiError(err)
-	}
-	filter, err := GetFilter(host, filterID)
-	if err != nil {
-		return nil, ApiError(err)
-	}
-	if !strings.Contains(filter.Jql, "ORDER") {
-		filter.Jql = filter.Jql + " ORDER BY updated DESC"
-	}
-	issues, _, err := client.Issue.Search(filter.Jql, &jira.SearchOptions{Fields: fields})
+	issues, _, err := client.Issue.Search(jql, &jira.SearchOptions{Fields: opts.Fields})
 	return issues, ApiError(err)
 }
 
