@@ -8,6 +8,7 @@ commands:
           command: |
             go get -t -v ./...
             PATH=$PATH:$PWD/bin go test -v ./...
+            cd cmd/gj
             go build
             go vet
 
@@ -30,7 +31,7 @@ jobs:
       - run: curl -L "https://github.com/goreleaser/goreleaser/releases/download/v0.164.0/goreleaser_Linux_x86_64.tar.gz" | tar -xzv goreleaser
       - run: sudo mv goreleaser /usr/local/bin/
       - checkout
-      - run: cd example && goreleaser
+      - run: cd cmd/gj && goreleaser
 
 workflows:
   version: 2
