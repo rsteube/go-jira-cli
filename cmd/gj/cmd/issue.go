@@ -12,7 +12,7 @@ var issueOpts api.ListIssuesOptions
 
 var issueCmd = &cobra.Command{
 	Use:   "issue",
-	Short: "",
+	Short: "Manage issues",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return issue_viewCmd.RunE(issue_viewCmd, []string{})
 	},

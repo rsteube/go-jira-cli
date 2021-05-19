@@ -16,7 +16,7 @@ import (
 
 var issue_viewCmd = &cobra.Command{
 	Use:   "view",
-	Short: "view issue",
+	Short: "View issue",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {

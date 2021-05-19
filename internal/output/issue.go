@@ -107,14 +107,20 @@ func PrintIssue(io *iostreams.IOStreams, issue *jira.Issue, priorities []jira.Pr
 			return err
 		}
 
-		updated, err := time.Parse("2006-01-02T15:04:05Z0700", comment.Updated)
+		created, err := time.Parse("2006-01-02T15:04:05Z0700", comment.Created)
 		if err != nil {
 			return err
 		}
 
-		fmt.Fprintf(io.Out, "%v • %v%v\n%v\n",
+        edited := ""
+        if comment.Created != comment.Updated {
+            edited = " • Edited"
+        }
+
+		fmt.Fprintf(io.Out, "%v • %v%v%v\n%v\n",
 			cs.Bold(comment.Author.DisplayName),
-			utils.FuzzyAgo(time.Since(time.Time(updated))),
+			utils.FuzzyAgo(time.Since(time.Time(created))),
+            edited,
 			newest,
 			body,
 		)
