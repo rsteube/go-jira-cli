@@ -49,11 +49,15 @@ func PrintIssueList(io *iostreams.IOStreams, priorities []jira.Priority, issues 
 
 		printer.AddField(issue.Fields.Summary, nil, nil)
 
-		priority := issue.Fields.Priority.Name
-		if len(priority) > 3 {
-			priority = priority[:3]
+		if issue.Fields.Priority != nil {
+			priority := issue.Fields.Priority.Name
+			if len(priority) > 3 {
+				priority = priority[:3]
+			}
+			printer.AddField(priority, nil, colorScheme.ColorFromString(strings.TrimSpace(priorityColors[issue.Fields.Priority.Name]))) // TODO handle err when color is not in map
+		} else {
+			printer.AddField("", nil, nil) // TODO handle err when color is not in map
 		}
-		printer.AddField(priority, nil, colorScheme.ColorFromString(strings.TrimSpace(priorityColors[issue.Fields.Priority.Name]))) // TODO handle err when color is not in map
 
 		components := make([]string, len(issue.Fields.Components))
 		for index, component := range issue.Fields.Components {
