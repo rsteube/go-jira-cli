@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"os"
 
@@ -9,12 +10,13 @@ import (
 )
 
 type HostConfig struct {
-	User   string
-	Token  string
-	Cookie string
+	User   string            `yaml:"user,omitempty"`
+	Token  string            `yaml:"token,omitempty"`
+	Cookie map[string]string `yaml:"cookie,omitempty"`
 }
 
-func Hosts() (config map[string]HostConfig, err error) {
+// TODO handle missing file/directory
+func Hosts() (config map[string]*HostConfig, err error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -25,4 +27,29 @@ func Hosts() (config map[string]HostConfig, err error) {
 	}
 	err = yaml.Unmarshal(content, &config)
 	return
+}
+
+// TODO handle missing file/directory
+func AddHost(host string, config *HostConfig) error {
+	current, err := Hosts()
+	if err != nil {
+		return err
+	}
+
+	if current == nil { // TODO fix in Hosts
+		current = make(map[string]*HostConfig)
+	}
+
+	current[host] = config
+
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+
+	marshalled, err := yaml.Marshal(current)
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(fmt.Sprintf("%v/.config/gj/hosts.yaml", home), marshalled, fs.ModePerm)
 }

@@ -62,16 +62,6 @@ func init() {
 			return action.ActionIssueTypes(&issueOpts.Host, issueOpts.Project).Invoke(c).Filter(c.Parts).ToA()
 		}),
 		"filter": action.ActionFilters(&issueOpts.Host),
-		"host": carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-			if hosts, err := config.Hosts(); err != nil {
-				return carapace.ActionMessage(err.Error())
-			} else {
-				vals := make([]string, 0)
-				for host := range hosts {
-					vals = append(vals, host)
-				}
-				return carapace.ActionValues(vals...)
-			}
-		}),
+		"host":   action.ActionConfigHosts(),
 	})
 }

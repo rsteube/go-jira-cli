@@ -2,12 +2,38 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/rsteube/go-jira-cli/internal/config"
 )
+
+func CookieAuth(host string, user string, password string) (map[string]string, error) {
+	tp := jira.CookieAuthTransport{
+		Username: user,
+		Password: password,
+		AuthURL:  fmt.Sprintf("https://%v/rest/auth/1/session", host),
+	}
+	client, err := jira.NewClient(tp.Client(), "https://"+host)
+	if err != nil {
+		return nil, err
+	}
+
+	_, _, err = client.User.GetSelf()
+	if err != nil {
+		return nil, err
+	}
+
+	result := make(map[string]string)
+	for _, cookie := range tp.SessionObject {
+		if cookie.Name == "atlassian.xsrf.token" || cookie.Name == "JSESSIONID" {
+			result[cookie.Name] = cookie.Value
+		}
+	}
+	return result, nil
+}
 
 func NewClient(host string) (*jira.Client, error) {
 	hosts, err := config.Hosts()
@@ -24,13 +50,11 @@ func NewClient(host string) (*jira.Client, error) {
 			}
 			return jira.NewClient(tp.Client(), "https://"+host)
 		}
-		if auth.Cookie != "" {
+		if auth.Cookie != nil {
 			sessionObject := make([]*http.Cookie, 0)
-			for _, cookie := range strings.Split(auth.Cookie, ";") {
-				splitted := strings.SplitN(strings.TrimSpace(cookie), "=", 2)
-				sessionObject = append(sessionObject, &http.Cookie{Name: splitted[0], Value: splitted[1]})
+			for key, value := range auth.Cookie {
+				sessionObject = append(sessionObject, &http.Cookie{Name: key, Value: value})
 			}
-
 			tp := jira.CookieAuthTransport{
 				SessionObject: sessionObject,
 			}
