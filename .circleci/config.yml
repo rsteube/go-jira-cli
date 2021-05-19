@@ -1,0 +1,48 @@
+version: 2.1
+
+commands:
+  run_tests:
+    steps:
+      - run:
+          name: "build"
+          command: |
+            go get -t -v ./...
+            PATH=$PATH:$PWD/bin go test -v ./...
+            go build
+            go vet
+
+jobs:
+  go-current:
+    docker:
+      - image: cimg/go:1.16
+        environment:
+          GO111MODULE: "on"
+    steps:
+      - checkout
+      - run_tests
+      - run:
+          name: "Check formatting"
+          command: diff -u <(echo -n) <(gofmt -d -s .)
+  release:
+    docker:
+      - image: cimg/go:1.16
+    steps:
+      - run: curl -L "https://github.com/goreleaser/goreleaser/releases/download/v0.164.0/goreleaser_Linux_x86_64.tar.gz" | tar -xzv goreleaser
+      - run: sudo mv goreleaser /usr/local/bin/
+      - checkout
+      - run: cd example && goreleaser
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - go-current
+  tags:
+    jobs:
+      - release:
+          # Only run this job on git tag pushes
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(-.*)*/
