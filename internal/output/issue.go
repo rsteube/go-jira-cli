@@ -32,14 +32,28 @@ func colorNameFromHex(hex string) string {
 	return p.Clamped([]color.Color{gamut.Hex(hex)})[0].Name
 }
 
-func PrintIssueList(io *iostreams.IOStreams, issues []jira.Issue) error {
+func PrintIssueList(io *iostreams.IOStreams, priorities []jira.Priority, issues []jira.Issue) error {
 	printer := utils.NewTablePrinter(io)
 	colorScheme := io.ColorScheme()
+
+	// TODO cache colors
+	priorityColors := make(map[string]string)
+	for _, priority := range priorities {
+		priorityColors[priority.Name] = colorNameFromHex(priority.StatusColor)
+	}
+
 	for _, issue := range issues {
 		color := strings.Split(issue.Fields.Status.StatusCategory.ColorName, "-")[0] // ignore background
 
 		printer.AddField(issue.Key, nil, colorScheme.ColorFromString(color))
+
 		printer.AddField(issue.Fields.Summary, nil, nil)
+
+		priority := issue.Fields.Priority.Name
+		if len(priority) > 3 {
+			priority = priority[:3]
+		}
+		printer.AddField(priority, nil, colorScheme.ColorFromString(strings.TrimSpace(priorityColors[issue.Fields.Priority.Name]))) // TODO handle err when color is not in map
 
 		components := make([]string, len(issue.Fields.Components))
 		for index, component := range issue.Fields.Components {

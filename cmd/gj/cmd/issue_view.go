@@ -28,14 +28,19 @@ var issue_viewCmd = &cobra.Command{
 				return browser.OpenURL(fmt.Sprintf("https://%v/issues/?jql=%v", issueOpts.Host, url.QueryEscape(jql)))
 			}
 
-			issueOpts.Fields = []string{"key", "status", "type", "summary", "components", "updated"}
+			issueOpts.Fields = []string{"key", "status", "type", "summary", "components", "updated", "priority"}
 			issues, err := api.ListIssues(&issueOpts)
 			if err != nil {
 				return err
 			}
 
+			priorities, err := api.ListPriorities(issueOpts.Host) // TODO cache
+			if err != nil {
+				return err
+			}
+
 			return output.Pager(func(io *iostreams.IOStreams) error {
-				return output.PrintIssueList(io, issues)
+				return output.PrintIssueList(io, priorities, issues)
 			})
 		} else {
 			if cmd.Flag("web").Changed { // open in browser
