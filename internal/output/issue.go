@@ -2,6 +2,7 @@ package output
 
 import (
 	"fmt"
+	"image/color"
 	"strings"
 	"time"
 
@@ -11,7 +12,25 @@ import (
 	"github.com/cli/cli/pkg/markdown"
 	"github.com/cli/cli/pkg/text"
 	"github.com/cli/cli/utils"
+	"github.com/muesli/gamut"
 )
+
+func colorNameFromHex(hex string) string {
+	var p gamut.Palette
+	p.AddColors(
+		gamut.Colors{
+			{"magenta", gamut.Hex("#ff00ff"), "Reference"},
+			{"cyan", gamut.Hex("#00ffff"), "Reference"},
+			{"red", gamut.Hex("#ff0000"), "Reference"},
+			{"yellow", gamut.Hex("#ffff00"), "Reference"},
+			{"blue", gamut.Hex("#0000ff"), "Reference"},
+			{"green", gamut.Hex("#008000"), "Reference"},
+			{"gray", gamut.Hex("#808080"), "Reference"},
+		},
+	)
+
+	return p.Clamped([]color.Color{gamut.Hex(hex)})[0].Name
+}
 
 func PrintIssueList(io *iostreams.IOStreams, issues []jira.Issue) error {
 	printer := utils.NewTablePrinter(io)
@@ -44,7 +63,7 @@ func PrintIssueList(io *iostreams.IOStreams, issues []jira.Issue) error {
 	return printer.Render()
 }
 
-func PrintIssue(io *iostreams.IOStreams, issue *jira.Issue, comments bool) error {
+func PrintIssue(io *iostreams.IOStreams, issue *jira.Issue, priorities []jira.Priority, comments bool) error {
 	description, err := markdown.Render(j2m.JiraToMD(issue.Fields.Description), "dark") // TODO glamour style from config
 	if err != nil {
 		return err
@@ -55,11 +74,17 @@ func PrintIssue(io *iostreams.IOStreams, issue *jira.Issue, comments bool) error
 		components[index] = component.Name
 	}
 
+	// TODO cache colors
+	priorityColors := make(map[string]string)
+	for _, priority := range priorities {
+		priorityColors[priority.Name] = colorNameFromHex(priority.StatusColor)
+	}
+
 	cs := io.ColorScheme()
 	fmt.Fprintf(io.Out, "%v %v [%v]\n%v %v • opened %v • %v comment(s)\nComponents: %v\nLabels: %v\n%v\n",
 		cs.Bold(issue.Key),
 		cs.Bold(issue.Fields.Summary),
-		cs.ColorFromString(strings.SplitN(issue.Fields.Priority.StatusColor, "-", 2)[0])(issue.Fields.Priority.Name),
+		cs.ColorFromString(priorityColors[issue.Fields.Priority.Name])(issue.Fields.Priority.Name), // TODO handle err when color is not in map
 		cs.ColorFromString(strings.SplitN(issue.Fields.Status.StatusCategory.ColorName, "-", 2)[0])(issue.Fields.Status.Name),
 		issue.Fields.Type.Name,
 		utils.FuzzyAgo(time.Since(time.Time(issue.Fields.Created))),

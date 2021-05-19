@@ -33,8 +33,8 @@ var issue_viewCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			return output.Pager(func(io *iostreams.IOStreams) error {
 
+			return output.Pager(func(io *iostreams.IOStreams) error {
 				return output.PrintIssueList(io, issues)
 			})
 		} else {
@@ -46,8 +46,13 @@ var issue_viewCmd = &cobra.Command{
 					return err
 				}
 
+				priorities, err := api.ListPriorities(issueOpts.Host) // TODO cache
+				if err != nil {
+					return err
+				}
+
 				return output.Pager(func(io *iostreams.IOStreams) error {
-					return output.PrintIssue(io, issue, cmd.Flag("comments").Changed)
+					return output.PrintIssue(io, issue, priorities, cmd.Flag("comments").Changed)
 				})
 			}
 		}

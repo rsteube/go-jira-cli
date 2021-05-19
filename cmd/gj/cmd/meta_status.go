@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var status_listCmd = &cobra.Command{
-	Use:   "list",
+var meta_statusCmd = &cobra.Command{
+	Use:   "status",
 	Short: "",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		statuses, err := api.ListStatuses(cmd.Flag("host").Value.String())
@@ -23,5 +23,5 @@ var status_listCmd = &cobra.Command{
 }
 
 func init() {
-	statusCmd.AddCommand(status_listCmd)
+	metaCmd.AddCommand(meta_statusCmd)
 }

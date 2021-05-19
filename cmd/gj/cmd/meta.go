@@ -6,17 +6,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var statusCmd = &cobra.Command{
-	Use:   "status",
+var metaCmd = &cobra.Command{
+	Use:   "meta",
 	Short: "",
 	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
 func init() {
-	statusCmd.PersistentFlags().String("host", "", "jira host")
-	rootCmd.AddCommand(statusCmd)
+	metaCmd.PersistentFlags().String("host", "", "jira host")
+	rootCmd.AddCommand(metaCmd)
 
-	carapace.Gen(statusCmd).FlagCompletion(carapace.ActionMap{
+	carapace.Gen(metaCmd).FlagCompletion(carapace.ActionMap{
 		"host": carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			if hosts, err := config.Hosts(); err != nil {
 				return carapace.ActionMessage(err.Error())
