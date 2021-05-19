@@ -1,48 +1,26 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-
-commands:
-  run_tests:
-    steps:
-      - run:
-          name: "build"
-          command: |
-            go get -t -v ./...
-            PATH=$PATH:$PWD/bin go test -v ./...
-            go build
-            go vet
-
 jobs:
-  go-current:
+  build:
+    working_directory: ~/repo
     docker:
-      - image: cimg/go:1.16
-        environment:
-          GO111MODULE: "on"
+      - image: circleci/golang:1.15.8
     steps:
       - checkout
-      - run_tests
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
       - run:
-          name: "Check formatting"
-          command: diff -u <(echo -n) <(gofmt -d -s .)
-  release:
-    docker:
-      - image: cimg/go:1.16
-    steps:
-      - run: curl -L "https://github.com/goreleaser/goreleaser/releases/download/v0.164.0/goreleaser_Linux_x86_64.tar.gz" | tar -xzv goreleaser
-      - run: sudo mv goreleaser /usr/local/bin/
-      - checkout
-      - run: cd example && goreleaser
-
-workflows:
-  version: 2
-  main:
-    jobs:
-      - go-current
-  tags:
-    jobs:
-      - release:
-          # Only run this job on git tag pushes
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /v[0-9]+(\.[0-9]+)*(-.*)*/
+          name: Install Dependencies
+          command: go mod download
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p /tmp/test-reports
+            gotestsum --junitfile /tmp/test-reports/unit-tests.xml
+      - store_test_results:
+          path: /tmp/test-reports
