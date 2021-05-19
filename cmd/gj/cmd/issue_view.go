@@ -40,27 +40,26 @@ var issue_viewCmd = &cobra.Command{
 		} else {
 			if cmd.Flag("web").Changed { // open in browser
 				return browser.OpenURL(fmt.Sprintf("https://%v/browse/%v", issueOpts.Host, args[0]))
-			} else {
-				issue, err := api.GetIssue(issueOpts.Host, args[0], &jira.GetQueryOptions{})
-				if err != nil {
-					return err
-				}
-
-				priorities, err := api.ListPriorities(issueOpts.Host) // TODO cache
-				if err != nil {
-					return err
-				}
-
-				return output.Pager(func(io *iostreams.IOStreams) error {
-					return output.PrintIssue(io, issue, priorities, cmd.Flag("comments").Changed)
-				})
 			}
+			issue, err := api.GetIssue(issueOpts.Host, args[0], &jira.GetQueryOptions{})
+			if err != nil {
+				return err
+			}
+
+			priorities, err := api.ListPriorities(issueOpts.Host) // TODO cache
+			if err != nil {
+				return err
+			}
+
+			return output.Pager(func(io *iostreams.IOStreams) error {
+				return output.PrintIssue(io, issue, priorities, cmd.Flag("comments").Changed)
+			})
 		}
 	},
 }
 
 func init() {
-	issue_viewCmd.Flags().Bool("comments", false, "fiew issue comments")
+	issue_viewCmd.Flags().Bool("comments", false, "view issue comments")
 	issueCmd.AddCommand(issue_viewCmd)
 
 	carapace.Gen(issue_viewCmd).PositionalCompletion(

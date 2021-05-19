@@ -20,7 +20,7 @@ var issueCmd = &cobra.Command{
 
 func init() {
 	issueCmd.PersistentFlags().Bool("web", false, "view in browser")
-	issueCmd.PersistentFlags().StringVar(&issueOpts.Host, "host", "", "jira host") // TODO maybe pass var to actions
+	issueCmd.PersistentFlags().StringVar(&issueOpts.Host, "host", config.Default().Host, "jira host") // TODO maybe pass var to actions
 	issueCmd.PersistentFlags().IntVarP(&issueOpts.Filter, "filter", "f", -1, "predefined filter")
 	issueCmd.PersistentFlags().IntVarP(&issueOpts.Limit, "limit", "l", 50, "limit results (default: 50)")
 	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Label, "label", nil, "filter label")
