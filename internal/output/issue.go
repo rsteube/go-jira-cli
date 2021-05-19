@@ -112,15 +112,15 @@ func PrintIssue(io *iostreams.IOStreams, issue *jira.Issue, priorities []jira.Pr
 			return err
 		}
 
-        edited := ""
-        if comment.Created != comment.Updated {
-            edited = " • Edited"
-        }
+		edited := ""
+		if comment.Created != comment.Updated {
+			edited = " • Edited"
+		}
 
 		fmt.Fprintf(io.Out, "%v • %v%v%v\n%v\n",
 			cs.Bold(comment.Author.DisplayName),
 			utils.FuzzyAgo(time.Since(time.Time(created))),
-            edited,
+			edited,
 			newest,
 			body,
 		)
