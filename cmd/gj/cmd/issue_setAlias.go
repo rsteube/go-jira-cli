@@ -7,9 +7,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var issue_aliasCmd = &cobra.Command{
-	Use:   "alias",
-	Short: "Add",
+var issue_setAliasCmd = &cobra.Command{
+	Use:   "set-alias",
+	Short: "Create alias commmand for current issue flag values",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		flagValues := make(map[string]string)
@@ -29,11 +29,11 @@ type Alias struct {
 }
 
 func init() {
-	issueCmd.AddCommand(issue_aliasCmd)
+	issueCmd.AddCommand(issue_setAliasCmd)
 
-	carapace.Gen(issue_aliasCmd).PositionalCompletion(
+	carapace.Gen(issue_setAliasCmd).PositionalCompletion(
 		carapace.ActionMultiParts("/", func(c carapace.Context) carapace.Action {
-			if cmd, _, err := issue_aliasCmd.Root().Find(c.Parts); err != nil {
+			if cmd, _, err := issue_setAliasCmd.Root().Find(c.Parts); err != nil {
 				return carapace.ActionValues()
 			} else {
 				vals := make([]string, 0)

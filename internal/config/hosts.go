@@ -17,7 +17,6 @@ type HostConfig struct {
 	Cookie map[string]string `yaml:"cookie,omitempty"`
 }
 
-
 // TODO handle missing file/directory
 func Hosts() (config map[string]*HostConfig, err error) {
 	home, err := os.UserHomeDir()
@@ -67,7 +66,7 @@ func RemoveHost(host string) error {
 		current = make(map[string]*HostConfig)
 	}
 
-    delete(current, host)
+	delete(current, host)
 
 	home, err := os.UserHomeDir()
 	if err != nil {

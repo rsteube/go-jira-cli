@@ -8,11 +8,11 @@ import (
 )
 
 var authLogoutCmd = &cobra.Command{
-	Use:   "logout",
-	Short: "",
+	Use:   "logout [host]",
+	Short: "Remove authentication for a Jira host",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-        return config.RemoveHost(args[0])
+		return config.RemoveHost(args[0])
 	},
 }
 
