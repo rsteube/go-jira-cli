@@ -19,17 +19,15 @@ gj issue view --host <TAB>
 
 ## Getting Started
 
-Host config with optional cookie value or user/token for basic auth (anonymous if none is set):
-
 ```sh
-#~/.config/gj/hosts.yaml
-issues.apache.org/jira:
-  cookie:
-  user:
-  token:
+gj auth login [host] # e.g. 'issues.apache.org/jira'
 ```
+- **anonymous** login
+- **basic** auth with `username` and `token`
+- **cookie** with `username` and `password` (only cookie will be stored)
 
-Source completion:
+### Shell completion
+
 ```sh
 #bash
 source <(gj _carapace)
