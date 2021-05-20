@@ -8,12 +8,14 @@ import (
 
 var projectCmd = &cobra.Command{
 	Use:   "project",
-	Short: "",
-	Run:   func(cmd *cobra.Command, args []string) {},
+	Short: "Manage projects",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return project_viewCmd.RunE(project_viewCmd, []string{})
+	},
 }
 
 func init() {
-	projectCmd.PersistentFlags().String("host", "", "jira host")
+	projectCmd.PersistentFlags().String("host", config.Default().Host, "jira host")
 	rootCmd.AddCommand(projectCmd)
 
 	carapace.Gen(projectCmd).FlagCompletion(carapace.ActionMap{

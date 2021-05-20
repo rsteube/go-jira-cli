@@ -15,7 +15,7 @@ func ActionProjects(host *string) carapace.Action {
 				return carapace.ActionMessage(err.Error())
 			} else {
 				vals := make([]string, 0)
-				for _, project := range *projects {
+				for _, project := range projects {
 					vals = append(vals, project.Key, project.Name)
 				}
 				return carapace.ActionValuesDescribed(vals...)
