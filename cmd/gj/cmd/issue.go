@@ -27,7 +27,7 @@ func init() {
 	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Priority, "priority", nil, "filter priority")
 	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Assignee, "assignee", "a", nil, "filter assignee")
 	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Component, "component", "c", nil, "filter component")
-	issueCmd.PersistentFlags().StringSliceVarP(&projectOpts.Category, "project", "p", nil, "filter project")
+	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Project, "project", "p", nil, "filter project")
 	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Resolution, "resolution", "r", nil, "filter resolution")
 	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Status, "status", "s", nil, "filter status")
 	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.StatusCategory, "status-category", nil, "filter status-category")
