@@ -2,9 +2,14 @@ package cmd
 
 import (
 	"github.com/rsteube/carapace"
+	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
 	"github.com/rsteube/go-jira-cli/internal/config"
 	"github.com/spf13/cobra"
 )
+
+var projectOpts struct {
+	Category []string
+}
 
 var projectCmd = &cobra.Command{
 	Use:   "project",
@@ -16,9 +21,14 @@ var projectCmd = &cobra.Command{
 
 func init() {
 	projectCmd.PersistentFlags().String("host", config.Default().Host, "jira host")
+	projectCmd.PersistentFlags().StringSliceVar(&projectOpts.Category, "category", []string{}, "filter category")
 	rootCmd.AddCommand(projectCmd)
 
 	carapace.Gen(projectCmd).FlagCompletion(carapace.ActionMap{
+		"category": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			host := projectCmd.Flag("host").Value.String()
+			return action.ActionProjectCategories(&host).Invoke(c).Filter(c.Parts).ToA()
+		}),
 		"host": carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			if hosts, err := config.Hosts(); err != nil {
 				return carapace.ActionMessage(err.Error())

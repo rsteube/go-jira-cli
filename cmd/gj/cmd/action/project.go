@@ -8,10 +8,10 @@ import (
 	"github.com/rsteube/go-jira-cli/internal/api"
 )
 
-func ActionProjects(host *string) carapace.Action {
+func ActionProjects(host *string, category []string) carapace.Action {
 	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 		return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-			if projects, err := api.ListProjects(*host); err != nil {
+			if projects, err := api.ListProjects(*host, category); err != nil {
 				return carapace.ActionMessage(err.Error())
 			} else {
 				vals := make([]string, 0)
@@ -20,6 +20,22 @@ func ActionProjects(host *string) carapace.Action {
 				}
 				return carapace.ActionValuesDescribed(vals...)
 			}
-		}).Cache(1*time.Hour, cache.String(*host))
+		}).Cache(24*time.Hour, cache.String(*host))
+	})
+}
+
+func ActionProjectCategories(host *string) carapace.Action {
+	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+			if categories, err := api.ListProjectCategories(*host); err != nil {
+				return carapace.ActionMessage(err.Error())
+			} else {
+				vals := make([]string, 0)
+				for _, category := range categories {
+					vals = append(vals, category.Name, category.Description)
+				}
+				return carapace.ActionValuesDescribed(vals...)
+			}
+		}).Cache(24*time.Hour, cache.String(*host))
 	})
 }

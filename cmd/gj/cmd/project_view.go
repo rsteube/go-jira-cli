@@ -15,7 +15,7 @@ var project_viewCmd = &cobra.Command{
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			projects, err := api.ListProjects(cmd.Flag("host").Value.String())
+			projects, err := api.ListProjects(cmd.Flag("host").Value.String(), projectOpts.Category)
 			if err != nil {
 				return err
 			}
@@ -39,7 +39,7 @@ func init() {
 	carapace.Gen(project_viewCmd).PositionalCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			host := project_viewCmd.Flag("host").Value.String()
-			return action.ActionProjects(&host)
+			return action.ActionProjects(&host, projectOpts.Category)
 		}),
 	)
 }
