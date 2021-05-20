@@ -22,7 +22,7 @@ gj issue view --host <TAB>
 ```sh
 gj auth login [host] # e.g. 'issues.apache.org/jira'
 ```
-- **anonymous** login
+- **anonymous** without credentials
 - **basic** auth with `username` and `token`
 - **cookie** with `username` and `password` (only cookie will be stored)
 
