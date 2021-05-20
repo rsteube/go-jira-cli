@@ -20,6 +20,7 @@ var projectCmd = &cobra.Command{
 }
 
 func init() {
+	projectCmd.PersistentFlags().Bool("web", false, "view in browser")
 	projectCmd.PersistentFlags().String("host", config.Default().Host, "jira host")
 	projectCmd.PersistentFlags().StringSliceVar(&projectOpts.Category, "category", []string{}, "filter category")
 	rootCmd.AddCommand(projectCmd)
