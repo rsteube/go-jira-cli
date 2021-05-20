@@ -41,8 +41,14 @@ var project_viewCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+        activities ,err := api.ListActivities(host, args[0])
+		if err != nil {
+			return err
+		}
+
 		return output.Pager(func(io *iostreams.IOStreams) error {
-			return output.PrintProject(io, project)
+			return output.PrintProject(io, project, activities)
 		})
 	},
 }
