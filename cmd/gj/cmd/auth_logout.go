@@ -1,0 +1,25 @@
+package cmd
+
+import (
+	"github.com/rsteube/carapace"
+	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
+	"github.com/rsteube/go-jira-cli/internal/config"
+	"github.com/spf13/cobra"
+)
+
+var authLogoutCmd = &cobra.Command{
+	Use:   "logout",
+	Short: "",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+        return config.RemoveHost(args[0])
+	},
+}
+
+func init() {
+	authCmd.AddCommand(authLogoutCmd)
+
+	carapace.Gen(authLogoutCmd).PositionalCompletion(
+		action.ActionConfigHosts(),
+	)
+}

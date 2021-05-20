@@ -10,7 +10,7 @@ import (
 	"github.com/rsteube/go-jira-cli/internal/config"
 )
 
-func CookieAuth(host string, user string, password string) (map[string]string, error) {
+func AquireCookie(host string, user string, password string) (map[string]string, error) {
 	tp := jira.CookieAuthTransport{
 		Username: user,
 		Password: password,

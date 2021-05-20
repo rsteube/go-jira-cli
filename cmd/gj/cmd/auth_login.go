@@ -33,7 +33,7 @@ var authLoginCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			hostConfig.Cookie, err = api.CookieAuth(args[0], user, pass)
+			hostConfig.Cookie, err = api.AquireCookie(args[0], user, pass)
 			if err != nil {
 				return err
 			}
