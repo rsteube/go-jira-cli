@@ -6,6 +6,8 @@ import (
 	"github.com/cli/browser"
 	"github.com/cli/cli/pkg/iostreams"
 	"github.com/rsteube/carapace"
+
+	//	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
 	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
 	"github.com/rsteube/go-jira-cli/internal/api"
 	"github.com/rsteube/go-jira-cli/internal/output"
