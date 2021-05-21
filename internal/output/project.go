@@ -34,18 +34,17 @@ func PrintProject(io *iostreams.IOStreams, project *jira.Project, activities *ap
 	fmt.Fprintln(io.Out, project.ProjectCategory.Name)
 
 	converter := md.NewConverter("", true, &md.Options{
-        LinkStyle: "referenced",
-        LinkReferenceStyle: "shortcut",
-    })
+		LinkStyle:          "referenced",
+		LinkReferenceStyle: "shortcut",
+	})
 	for _, activity := range activities.Entry {
 		mdTitle, err := converter.ConvertString(activity.Title)
 		if err != nil {
 			return err
 		}
-		fmt.Fprintln(io.Out,cs.Bold(strings.SplitN(mdTitle, "\n", 2)[0]))
+		fmt.Fprintln(io.Out, cs.Bold(strings.SplitN(mdTitle, "\n", 2)[0]))
 
-
-        mdContent, err := converter.ConvertString(activity.Content)
+		mdContent, err := converter.ConvertString(activity.Content)
 		if err != nil {
 			return err
 		}

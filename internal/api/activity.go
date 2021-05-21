@@ -49,12 +49,12 @@ func ListActivities(host string, project string) (*ActivityStream, error) {
 		if err != nil {
 			return nil, err
 		}
-        var as ActivityStream
-        err = xml.Unmarshal(bodyBytes, &as)
+		var as ActivityStream
+		err = xml.Unmarshal(bodyBytes, &as)
 		if err != nil {
 			return nil, err
 		}
-        return &as, nil
+		return &as, nil
 	}
-    return nil, errors.New("")
+	return nil, errors.New("")
 }

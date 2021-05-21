@@ -42,7 +42,7 @@ var project_viewCmd = &cobra.Command{
 			return err
 		}
 
-        activities ,err := api.ListActivities(host, args[0])
+		activities, err := api.ListActivities(host, args[0])
 		if err != nil {
 			return err
 		}

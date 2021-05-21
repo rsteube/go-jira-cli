@@ -8,22 +8,22 @@ import (
 )
 
 type ListIssuesOptions struct {
-	Host           string
-	Project        []string
-	Type           []string
-	Status         []string
-	StatusCategory []string
+	Host              string
+	Project           []string
+	Type              []string
+	Status            []string
+	StatusCategory    []string
 	NotStatusCategory []string
-	Assignee       []string
-	Component      []string
-	Label          []string
-	Priority       []string
-	Resolution     []string
-	Fields         []string
-	Filter         int
-	Jql            string
-	Query          string
-	Limit          int
+	Assignee          []string
+	Component         []string
+	Label             []string
+	Priority          []string
+	Resolution        []string
+	Fields            []string
+	Filter            int
+	Jql               string
+	Query             string
+	Limit             int
 }
 
 func (o *ListIssuesOptions) ToJql() (string, error) {
@@ -141,7 +141,7 @@ func DoTransition(host string, issueID string, transitionName string) (*jira.Sta
 	for _, transition := range transitions {
 		if transition.Name == transitionName {
 			_, err := client.Issue.DoTransition(issueID, transition.ID)
-            return &transition.To, err
+			return &transition.To, err
 		}
 	}
 	return nil, fmt.Errorf("invalid transition [%v]", transitionName)
