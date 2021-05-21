@@ -145,5 +145,17 @@ func PrintIssue(io *iostreams.IOStreams, issue *jira.Issue, priorities []jira.Pr
 	}
 
 	return nil
+}
 
+func PrintIssueTransitions(io *iostreams.IOStreams, transitions []jira.Transition) error {
+	printer := utils.NewTablePrinter(io)
+	cs := io.ColorScheme()
+
+	for _, transition := range transitions {
+		printer.AddField(transition.Name, nil, cs.Bold)
+		printer.AddField(transition.To.Name, nil, nil)
+		printer.AddField(transition.To.Description, nil, cs.Gray)
+		printer.EndRow()
+	}
+	return printer.Render()
 }

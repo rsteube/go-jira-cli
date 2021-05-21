@@ -13,6 +13,7 @@ type ListIssuesOptions struct {
 	Type           []string
 	Status         []string
 	StatusCategory []string
+	NotStatusCategory []string
 	Assignee       []string
 	Component      []string
 	Label          []string
@@ -67,6 +68,9 @@ func (o *ListIssuesOptions) ToJql() (string, error) {
 	if o.StatusCategory != nil && len(o.StatusCategory) > 0 {
 		jql = append(jql, fmt.Sprintf(`statusCategory in ("%v")`, strings.Join(o.StatusCategory, `","`)))
 	}
+	if o.NotStatusCategory != nil && len(o.NotStatusCategory) > 0 {
+		jql = append(jql, fmt.Sprintf(`not statusCategory in ("%v")`, strings.Join(o.NotStatusCategory, `","`)))
+	}
 	if o.Query != "" {
 		jql = append(jql, fmt.Sprintf(`text ~ "%v"`, o.Query))
 	}
@@ -113,4 +117,32 @@ func GetIssue(host string, issueID string, opts *jira.GetQueryOptions) (*jira.Is
 	}
 	issue, _, err := client.Issue.Get(issueID, opts)
 	return issue, ApiError(err)
+}
+
+func GetIssueTransitions(host string, issueId string) ([]jira.Transition, error) {
+	client, err := NewClient(host)
+	if err != nil {
+		return nil, ApiError(err)
+	}
+	transitions, _, err := client.Issue.GetTransitions(issueId)
+	return transitions, ApiError(err)
+}
+
+func DoTransition(host string, issueID string, transitionName string) (*jira.Status, error) {
+	client, err := NewClient(host)
+	if err != nil {
+		return nil, ApiError(err)
+	}
+	transitions, _, err := client.Issue.GetTransitions(issueID)
+	if err != nil {
+		return nil, ApiError(err)
+	}
+
+	for _, transition := range transitions {
+		if transition.Name == transitionName {
+			_, err := client.Issue.DoTransition(issueID, transition.ID)
+            return &transition.To, err
+		}
+	}
+	return nil, fmt.Errorf("invalid transition [%v]", transitionName)
 }
