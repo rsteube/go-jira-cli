@@ -26,12 +26,13 @@ func init() {
 	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Priority, "priority", nil, "filter priority")
 	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.StatusCategory, "status-category", nil, "filter status-category")
 	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.NotStatusCategory, "not-status-category", nil, "filter status-category")
-	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Assignee, "assignee", "a", nil, "filter assignee")
-	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Component, "component", "c", nil, "filter component")
-	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Project, "project", "p", nil, "filter project")
-	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Resolution, "resolution", "r", nil, "filter resolution")
-	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Status, "status", "s", nil, "filter status")
-	issueCmd.PersistentFlags().StringSliceVarP(&issueOpts.Type, "type", "t", nil, "filter type")
+	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Assignee, "assignee", nil, "filter assignee")
+	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Component, "component", nil, "filter component")
+	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Project, "project", nil, "filter project")
+	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Resolution, "resolution", nil, "filter resolution")
+	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Status, "status", nil, "filter status")
+	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.NotStatus, "not-status", nil, "filter status")
+	issueCmd.PersistentFlags().StringSliceVar(&issueOpts.Type, "type", nil, "filter type")
 	issueCmd.PersistentFlags().StringVar(&issueOpts.Host, "host", config.Default().Host, "jira host") // TODO maybe pass var to actions
 	issueCmd.PersistentFlags().StringVarP(&issueOpts.Jql, "jql", "j", "", "custom jql")
 	issueCmd.PersistentFlags().StringVarP(&issueOpts.Query, "query", "q", "", "filter text")
@@ -54,6 +55,9 @@ func init() {
 			return action.ActionProjects(&issueOpts.Host, projectOpts.Category).Invoke(c).Filter(c.Parts).ToA()
 		}),
 		"status": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
+			return action.ActionStatuses(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
+		}),
+		"not-status": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			return action.ActionStatuses(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
 		}),
 		"status-category": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {

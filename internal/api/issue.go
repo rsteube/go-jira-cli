@@ -12,6 +12,7 @@ type ListIssuesOptions struct {
 	Project           []string
 	Type              []string
 	Status            []string
+	NotStatus         []string
 	StatusCategory    []string
 	NotStatusCategory []string
 	Assignee          []string
@@ -65,11 +66,14 @@ func (o *ListIssuesOptions) ToJql() (string, error) {
 	if o.Status != nil && len(o.Status) > 0 {
 		jql = append(jql, fmt.Sprintf(`status in ("%v")`, strings.Join(o.Status, `","`)))
 	}
+	if o.NotStatus != nil && len(o.NotStatus) > 0 {
+		jql = append(jql, fmt.Sprintf(`status not in ("%v")`, strings.Join(o.NotStatus, `","`)))
+	}
 	if o.StatusCategory != nil && len(o.StatusCategory) > 0 {
 		jql = append(jql, fmt.Sprintf(`statusCategory in ("%v")`, strings.Join(o.StatusCategory, `","`)))
 	}
 	if o.NotStatusCategory != nil && len(o.NotStatusCategory) > 0 {
-		jql = append(jql, fmt.Sprintf(`not statusCategory in ("%v")`, strings.Join(o.NotStatusCategory, `","`)))
+		jql = append(jql, fmt.Sprintf(`statusCategory not in ("%v")`, strings.Join(o.NotStatusCategory, `","`)))
 	}
 	if o.Query != "" {
 		jql = append(jql, fmt.Sprintf(`text ~ "%v"`, o.Query))
