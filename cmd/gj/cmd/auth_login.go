@@ -23,12 +23,12 @@ var authLoginCmd = &cobra.Command{
 			return err
 		}
 
-		hostConfig := &config.HostConfig{}
+		credentials := &config.Credentials{}
 		switch method {
 		case "anonymous":
 
 		case "basic":
-			hostConfig.User, hostConfig.Token, err = enterCredentials()
+			credentials.User, credentials.Token, err = enterCredentials()
 			if err != nil {
 				return err
 			}
@@ -37,13 +37,17 @@ var authLoginCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			hostConfig.Cookie, err = api.AquireCookie(host, user, pass)
+			credentials.Cookie, err = api.AquireCookie(host, user, pass)
 			if err != nil {
 				return err
 			}
 		}
 
-		config.AddHost(host, hostConfig)
+		config, err := config.Hosts()
+		if err != nil {
+			return err
+		}
+		config.Add(host, credentials)
 
 		return nil
 	},

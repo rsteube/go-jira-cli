@@ -12,7 +12,11 @@ var authLogoutCmd = &cobra.Command{
 	Short: "Remove authentication for a Jira host",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return config.RemoveHost(args[0])
+		config, err := config.Hosts()
+		if err != nil {
+			return nil
+		}
+		return config.Remove(args[0])
 	},
 }
 

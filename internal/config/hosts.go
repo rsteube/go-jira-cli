@@ -9,73 +9,58 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// TODO read/write config file functions
-// TODO current impletementation fragile
-type HostConfig struct {
+type Credentials struct {
 	User   string            `yaml:"user,omitempty"`
 	Token  string            `yaml:"token,omitempty"`
 	Cookie map[string]string `yaml:"cookie,omitempty"`
 }
 
-// TODO handle missing file/directory
-func Hosts() (config map[string]*HostConfig, err error) {
-	home, err := os.UserHomeDir()
+type HostCredentials map[string]*Credentials
+
+// TODO store locally to only load once
+func Hosts() (hc HostCredentials, err error) {
+	path, err := configPath("hosts.yaml")
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return make(HostCredentials), nil
+	}
+
+	content, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	content, err := ioutil.ReadFile(fmt.Sprintf("%v/.config/gj/hosts.yaml", home))
-	if err != nil {
-		return nil, err
-	}
-	err = yaml.Unmarshal(content, &config)
+	err = yaml.Unmarshal(content, &hc)
 	return
 }
 
-// TODO handle missing file/directory
-func AddHost(host string, config *HostConfig) error {
-	current, err := Hosts()
-	if err != nil {
-		return err
-	}
-
-	if current == nil { // TODO fix in Hosts
-		current = make(map[string]*HostConfig)
-	}
-
-	current[host] = config
-
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-
-	marshalled, err := yaml.Marshal(current)
-	if err != nil {
-		return err
-	}
-	return ioutil.WriteFile(fmt.Sprintf("%v/.config/gj/hosts.yaml", home), marshalled, fs.ModePerm)
+func (hc HostCredentials) Add(host string, config *Credentials) error {
+	map[string]*Credentials(hc)[host] = config
+	return hc.write()
 }
 
-func RemoveHost(host string) error {
-	current, err := Hosts()
+func (hc HostCredentials) Remove(host string) error {
+	delete(hc, host)
+	return hc.write()
+}
+
+func (hc HostCredentials) write() error {
+	path, err := configPath("hosts.yaml")
 	if err != nil {
 		return err
 	}
-
-	if current == nil { // TODO fix in Hosts
-		current = make(map[string]*HostConfig)
-	}
-
-	delete(current, host)
-
-	home, err := os.UserHomeDir()
+	marshalled, err := yaml.Marshal(hc)
 	if err != nil {
 		return err
 	}
+	return ioutil.WriteFile(path, marshalled, fs.ModePerm)
+}
 
-	marshalled, err := yaml.Marshal(current)
-	if err != nil {
-		return err
+func configPath(filename string) (path string, err error) {
+	var home string
+	if home, err = os.UserHomeDir(); err == nil {
+		dir := fmt.Sprintf("%v/.config/gj", home)
+		if err = os.MkdirAll(dir, os.ModePerm); err == nil {
+			path = fmt.Sprintf("%v/%v", dir, filename)
+		}
 	}
-	return ioutil.WriteFile(fmt.Sprintf("%v/.config/gj/hosts.yaml", home), marshalled, fs.ModePerm)
+	return
 }
