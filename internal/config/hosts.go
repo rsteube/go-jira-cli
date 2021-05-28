@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -17,7 +16,6 @@ type Credentials struct {
 
 type HostCredentials map[string]*Credentials
 
-// TODO store locally to only load once
 func Hosts() (hc HostCredentials, err error) {
 	path, err := configPath("hosts.yaml")
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -52,15 +50,4 @@ func (hc HostCredentials) write() error {
 		return err
 	}
 	return ioutil.WriteFile(path, marshalled, fs.ModePerm)
-}
-
-func configPath(filename string) (path string, err error) {
-	var home string
-	if home, err = os.UserHomeDir(); err == nil {
-		dir := fmt.Sprintf("%v/.config/gj", home)
-		if err = os.MkdirAll(dir, os.ModePerm); err == nil {
-			path = fmt.Sprintf("%v/%v", dir, filename)
-		}
-	}
-	return
 }

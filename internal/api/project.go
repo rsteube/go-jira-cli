@@ -21,7 +21,7 @@ func ListProjects(host string, category []string) ([]jira.ProjectInfo, error) {
 	result := make([]jira.ProjectInfo, 0)
 	for _, project := range projects {
 		for _, c := range category {
-			if c == project.ProjectCategory.Name {
+			if c == "" || c == project.ProjectCategory.Name {
 				result = append(result, project)
 			}
 		}
