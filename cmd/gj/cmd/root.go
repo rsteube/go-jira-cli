@@ -10,7 +10,7 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "gj",
-	Short: "A brief description of your application",
+	Short: "simple jira command line client",
 }
 
 func Execute() {

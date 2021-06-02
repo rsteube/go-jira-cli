@@ -12,7 +12,7 @@ import (
 	"github.com/rsteube/go-jira-cli/internal/api"
 )
 
-func PrintProjectList(io *iostreams.IOStreams, projects []jira.ProjectInfo) error {
+func PrintProjectList(io *iostreams.IOStreams, projects []api.ProjectListEntry) error {
 	printer := utils.NewTablePrinter(io)
 	cs := io.ColorScheme()
 	for _, project := range projects {
