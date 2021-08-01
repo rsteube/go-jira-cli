@@ -18,3 +18,14 @@ func ActionConfigHosts() carapace.Action {
 		}
 	})
 }
+
+func ActionConfigAliases() carapace.Action {
+	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		vals := make([]string, 0)
+		config.Aliases().TraverseSorted(func(name string, alias *config.Alias) error {
+			vals = append(vals, name, alias.Description)
+			return nil
+		})
+		return carapace.ActionValuesDescribed(vals...)
+	})
+}

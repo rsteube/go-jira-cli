@@ -1,24 +1,40 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/rsteube/carapace"
+	"github.com/rsteube/go-jira-cli/cmd/gj/cmd/action"
+	"github.com/rsteube/go-jira-cli/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"gopkg.in/yaml.v2"
 )
 
 var issue_setAliasCmd = &cobra.Command{
-	Use:   "set-alias",
+	Use:   "set-alias [name] [description]",
+	Args:  cobra.ExactArgs(2),
 	Short: "Create alias commmand for current issue flag values",
-	Run: func(cmd *cobra.Command, args []string) {
-
+	RunE: func(cmd *cobra.Command, args []string) error {
 		flagValues := make(map[string]string)
 		cmd.Parent().Flags().VisitAll(func(f *pflag.Flag) {
-			flagValues[f.Name] = f.Value.String()
+			if f.Changed {
+				if strings.HasSuffix(f.Value.Type(), "Slice") ||
+					strings.HasSuffix(f.Value.Type(), "Array") {
+					v := f.Value.String()
+					flagValues[f.Name] = v[1 : len(v)-1]
+				} else {
+					flagValues[f.Name] = f.Value.String()
+				}
+			}
 		})
-		if out, err := yaml.Marshal(flagValues); err == nil {
-			println(string(out))
-		}
+		return config.AddAlias(args[0], &config.Alias{
+			Command:     []string{"issue"},
+			Description: args[1],
+			Flags:       flagValues,
+		})
+		//if out, err := yaml.Marshal(flagValues); err == nil {
+		//	println(string(out))
+		//}
 	},
 }
 
@@ -32,18 +48,6 @@ func init() {
 	issueCmd.AddCommand(issue_setAliasCmd)
 
 	carapace.Gen(issue_setAliasCmd).PositionalCompletion(
-		carapace.ActionMultiParts("/", func(c carapace.Context) carapace.Action {
-			if cmd, _, err := issue_setAliasCmd.Root().Find(c.Parts); err != nil {
-				return carapace.ActionValues()
-			} else {
-				vals := make([]string, 0)
-				for _, subcommand := range cmd.Commands() {
-					if !subcommand.Hidden {
-						vals = append(vals, subcommand.Name())
-					}
-				}
-				return carapace.ActionValues(vals...).Invoke(c).Suffix("/").ToA()
-			}
-		}),
+		action.ActionConfigAliases(),
 	)
 }
