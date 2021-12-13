@@ -8,7 +8,7 @@ require (
 	github.com/StevenACoffman/j2m v0.0.0-20190826163711-7d8d00c99217
 	github.com/andygrunwald/go-jira v1.14.0
 	github.com/cli/browser v1.1.0
-	github.com/cli/cli v1.9.2
+	github.com/cli/cli v1.14.0
 	github.com/muesli/gamut v0.2.0
 	github.com/rsteube/carapace v0.11.1
 	github.com/spf13/cobra v1.2.1
