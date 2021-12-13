@@ -354,8 +354,8 @@ github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJ
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
-github.com/rsteube/carapace v0.8.11 h1:XYdIE3mvlx7X9k7PaGPGvxYEBRF5qYZtzUG9hDd6PA8=
-github.com/rsteube/carapace v0.8.11/go.mod h1:vDNOn5K8QzGAqLTSA6WcUVvoUR5jRDcBxxQIAbv2XzY=
+github.com/rsteube/carapace v0.11.1 h1:Q9lXcyo1H1mJEmvDpBJacbAUbb2NnD943SOwvMP1FxE=
+github.com/rsteube/carapace v0.11.1/go.mod h1:vDNOn5K8QzGAqLTSA6WcUVvoUR5jRDcBxxQIAbv2XzY=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg65j358z/aeFdxmN0P9QXhEzd20vsDc=
