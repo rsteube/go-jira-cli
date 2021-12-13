@@ -51,4 +51,4 @@ exec($(gj _carapace))
 
 # zsh
 source <(gj _carapace)
-``
+```
