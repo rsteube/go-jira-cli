@@ -43,8 +43,8 @@ github.com/AlecAivazis/survey/v2 v2.3.2/go.mod h1:TH2kPCDU3Kqq7pLbnCWwZXDBjnhZtm
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DATA-DOG/go-sqlmock v1.3.3/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
-github.com/JohannesKaufmann/html-to-markdown v1.2.0 h1:UGTGZeFq6ljcd6CSxLW+CzUXQQDMJMzQIQ4lVexFCOk=
-github.com/JohannesKaufmann/html-to-markdown v1.2.0/go.mod h1:uFuht6eFsIHpym/0KHVOxLSbNh8SJiaKRR5yewSag1I=
+github.com/JohannesKaufmann/html-to-markdown v1.3.0 h1:K/p4cq8Ib13hcSVcKQNfKCSWw93CYW5pAjY0fl85has=
+github.com/JohannesKaufmann/html-to-markdown v1.3.0/go.mod h1:JNSClIRYICFDiFhw6RBhBeWGnMSSKVZ6sPQA+TK4tyM=
 github.com/MakeNowJust/heredoc v1.0.0/go.mod h1:mG5amYoWBHf8vpLOuehzbGGw0EHxpZZ6lCpQ4fNJ8LE=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nBpB11F9br+3HUrpgb+fcm5iADzXXYEw=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
