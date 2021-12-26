@@ -66,6 +66,7 @@ func aliasOverride() {
 							if err := flag.Value.Set(flagValue); err != nil {
 								panic(err.Error())
 							}
+                            flag.Changed = true
 						}
 					}
 
