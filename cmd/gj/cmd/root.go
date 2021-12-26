@@ -66,13 +66,13 @@ func aliasOverride() {
 							if err := flag.Value.Set(flagValue); err != nil {
 								panic(err.Error())
 							}
-                            flag.Changed = true
+							flag.Changed = true
 						}
 					}
 
-                    if err := aliasedCmd.ValidateArgs(aliasedCmd.Flags().Args()); err != nil {
+					if err := aliasedCmd.ValidateArgs(aliasedCmd.Flags().Args()); err != nil {
 						panic(err.Error())
-                    }
+					}
 
 					err = aliasedCmd.RunE(aliasedCmd, aliasedCmd.Flags().Args())
 					if err != nil {
