@@ -70,6 +70,10 @@ func aliasOverride() {
 						}
 					}
 
+                    if err := aliasedCmd.ValidateArgs(aliasedCmd.Flags().Args()); err != nil {
+						panic(err.Error())
+                    }
+
 					err = aliasedCmd.RunE(aliasedCmd, aliasedCmd.Flags().Args())
 					if err != nil {
 						panic(err.Error())
