@@ -30,4 +30,24 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-
+brews:
+  -
+    name: go-jira-cli
+    description: "simple jira command line client"
+    homepage: "https://github.com/rsteube/go-jira-cli"
+    license: "MIT"
+    tap:
+      owner: rsteube
+      name: homebrew-tap
+      token: "{{ .Env.GORELEASER_GITHUB_TOKEN }}"
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+scoop:
+  name: go-jira-cli
+  description: "simple jira command line client"
+  homepage: "https://github.com/rsteube/go-jira-cli"
+  license: "MIT"
+  bucket:
+    owner: rsteube
+    name: scoop-bucket
+    token: "{{ .Env.GORELEASER_GITHUB_TOKEN }}"
+  commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
