@@ -10,7 +10,7 @@ require (
 	github.com/cli/browser v1.1.0
 	github.com/cli/cli v1.14.0
 	github.com/muesli/gamut v0.3.0
-	github.com/rsteube/carapace v0.12.3
+	github.com/rsteube/carapace v0.12.4
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
 	gopkg.in/yaml.v2 v2.4.0
