@@ -26,6 +26,10 @@ func ListProjects(host string, category []string) ([]ProjectListEntry, error) {
 		return nil, ApiError(err)
 	}
 	projects, _, err := client.Project.GetList()
+	if err != nil {
+		return nil, ApiError(err)
+	}
+
 	result := make([]ProjectListEntry, 0)
 	for _, project := range *projects {
 		if category == nil || len(category) == 0 {
