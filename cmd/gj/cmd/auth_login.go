@@ -61,7 +61,7 @@ func init() {
 	)
 }
 
-// trimHost trims prefix/suffix to support copy&and past from browser url
+// trimHost trims prefix/suffix to support copy&paste from browser url
 func trimHost(host string) string {
 	host = strings.TrimSpace(host)
 	host = strings.TrimPrefix(host, "https://")
