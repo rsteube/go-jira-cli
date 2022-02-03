@@ -26,7 +26,7 @@ gj auth login [host] # e.g. 'issues.apache.org/jira'
 
 ### Dependencies
 
-gj makes use of the [`bat` tool(https://github.com/sharkdp/bat)], a `cat` clone
+gj makes use of the [`bat` tool](https://github.com/sharkdp/bat), a `cat` clone
 with color support.
 
 Please install this using your local package manager beforehand.
