@@ -11,7 +11,7 @@ require (
 	github.com/cli/cli v1.14.0
 	github.com/muesli/gamut v0.3.0
 	github.com/rsteube/carapace v0.15.2
-	github.com/spf13/cobra v1.3.0
+	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
 	gopkg.in/yaml.v2 v2.4.0
 )
