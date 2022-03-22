@@ -3,7 +3,7 @@ module github.com/rsteube/go-jira-cli
 go 1.14
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.3.2
+	github.com/AlecAivazis/survey/v2 v2.3.3
 	github.com/JohannesKaufmann/html-to-markdown v1.3.3
 	github.com/StevenACoffman/j2m v0.0.0-20190826163711-7d8d00c99217
 	github.com/andygrunwald/go-jira v1.15.1
@@ -16,7 +16,6 @@ require (
 	github.com/rsteube/carapace v0.17.0
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v2 v2.4.0
