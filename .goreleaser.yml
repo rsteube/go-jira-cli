@@ -51,3 +51,24 @@ scoop:
     name: scoop-bucket
     token: "{{ .Env.GORELEASER_GITHUB_TOKEN }}"
   commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+
+aurs:
+  -
+    description: "simple jira command line client"
+    homepage: "https://github.com/rsteube/go-jira-cli"
+    license: "MIT"
+    maintainers:
+      - rsteube <rsteube@users.noreply.github.com>
+    private_key: '{{ .Env.AUR_KEY }}'
+    git_url: 'ssh://aur@aur.archlinux.org/go-jira-cli-bin.git'
+
+nfpms:
+  -
+    description: "simple jira command line client"
+    homepage: "https://github.com/rsteube/go-jira-cli"
+    license: "MIT"
+    maintainer: rsteube <rsteube@users.noreply.github.com>
+    formats:
+      - apk
+      - deb
+      - rpm
