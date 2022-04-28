@@ -17,9 +17,9 @@ func ActionPriorities(host *string) carapace.Action {
 			} else {
 				vals := make([]string, 0)
 				for _, priority := range priorities {
-					vals = append(vals, priority.Name, priority.Description)
+					vals = append(vals, priority.Name, priority.Description, priority.StatusColor)
 				}
-				return carapace.ActionValuesDescribed(vals...)
+				return carapace.ActionStyledValuesDescribed(vals...)
 			}
 		}).Cache(24*time.Hour, cache.String(*host))
 	})
