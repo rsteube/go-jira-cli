@@ -87,10 +87,10 @@ func aliasOverride() {
 		return nil
 	})
 
-	if carapace.IsCallback() && len(os.Args) > 3 {
-		if targetCmd, targetArgs, err := rootCmd.Find(os.Args[5:]); err == nil {
+	if carapace.IsCallback() && len(os.Args) > 2 {
+		if targetCmd, targetArgs, err := rootCmd.Find(os.Args[4:]); err == nil {
 			if alias := aliasCommands[targetCmd]; alias != nil {
-				newArgs := os.Args[:5]
+				newArgs := os.Args[:4]
 				newArgs = append(newArgs, alias.Command...)
 				newArgs = append(newArgs, targetArgs...)
 				os.Args = newArgs
