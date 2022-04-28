@@ -17,9 +17,9 @@ func ActionStatuses(host *string) carapace.Action {
 				} else {
 					vals := make([]string, 0)
 					for _, status := range statuses {
-						vals = append(vals, status.Name, status.Description)
+						vals = append(vals, status.Name, status.Description, statusColor(status.StatusCategory.ColorName))
 					}
-					return carapace.ActionValuesDescribed(vals...)
+					return carapace.ActionStyledValuesDescribed(vals...)
 				}
 			}).Cache(1*time.Hour, cache.String(*host))
 		})
@@ -35,9 +35,9 @@ func ActionStatusCategories(host *string) carapace.Action {
 				} else {
 					vals := make([]string, 0)
 					for _, category := range categories {
-						vals = append(vals, category.Name, category.Key)
+						vals = append(vals, category.Name, category.Key, statusColor(category.ColorName))
 					}
-					return carapace.ActionValuesDescribed(vals...)
+					return carapace.ActionStyledValuesDescribed(vals...)
 				}
 			}).Cache(1*time.Hour, cache.String(*host))
 		})

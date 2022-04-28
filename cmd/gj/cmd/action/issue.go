@@ -2,8 +2,6 @@ package action
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/rsteube/carapace"
 	"github.com/rsteube/go-jira-cli/internal/api"
 )
@@ -17,8 +15,7 @@ func ActionIssues(opts *api.ListIssuesOptions) carapace.Action {
 		} else {
 			vals := make([]string, 0)
 			for _, issue := range issues {
-				color := strings.Split(issue.Fields.Status.StatusCategory.ColorName, "-")[0]
-				vals = append(vals, issue.Key, issue.Fields.Summary, color)
+				vals = append(vals, issue.Key, issue.Fields.Summary, statusColor(issue.Fields.Status.StatusCategory.ColorName))
 			}
 			return carapace.ActionStyledValuesDescribed(vals...)
 		}
