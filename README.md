@@ -4,10 +4,6 @@ Simple [Jira](https://www.atlassian.com/software/jira) terminal client based on 
 
 [![asciicast](https://asciinema.org/a/414802.svg)](https://asciinema.org/a/414802)
 
-## Status
-
-WIP
-
 ## Example
 
 ```sh
