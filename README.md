@@ -24,13 +24,6 @@ gj auth login [host] # e.g. 'issues.apache.org/jira'
 - **basic** auth with `username` and `token`
 - **cookie** with `username` and `password` (only cookie will be stored)
 
-### Dependencies
-
-gj makes use of the [`bat` tool](https://github.com/sharkdp/bat), a `cat` clone
-with color support.
-
-Please install this using your local package manager beforehand.
-
 ### Shell completion
 
 ```sh
