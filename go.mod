@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.5
-	github.com/JohannesKaufmann/html-to-markdown v1.3.4
+	github.com/JohannesKaufmann/html-to-markdown v1.3.5
 	github.com/StevenACoffman/j2m v0.0.0-20190826163711-7d8d00c99217
 	github.com/andygrunwald/go-jira v1.15.1
 	github.com/cli/browser v1.1.0
