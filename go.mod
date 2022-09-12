@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.6
-	github.com/JohannesKaufmann/html-to-markdown v1.3.5
+	github.com/JohannesKaufmann/html-to-markdown v1.3.6
 	github.com/StevenACoffman/j2m v0.0.0-20190826163711-7d8d00c99217
 	github.com/andygrunwald/go-jira v1.16.0
 	github.com/cli/browser v1.1.0
@@ -16,7 +16,5 @@ require (
 	github.com/rsteube/carapace v0.23.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
-	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
-	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 )
