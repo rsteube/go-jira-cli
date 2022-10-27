@@ -14,7 +14,7 @@ require (
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/muesli/gamut v0.3.1
 	github.com/rsteube/carapace v0.25.1
-	github.com/spf13/cobra v1.6.0
+	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	gopkg.in/yaml.v2 v2.4.0
 )
