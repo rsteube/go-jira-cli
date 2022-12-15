@@ -28,7 +28,7 @@ func init() {
 	carapace.Gen(projectCmd).FlagCompletion(carapace.ActionMap{
 		"category": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
 			host := projectCmd.Flag("host").Value.String()
-			return action.ActionProjectCategories(&host).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionProjectCategories(&host).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"host": carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			if hosts, err := config.Hosts(); err != nil {
