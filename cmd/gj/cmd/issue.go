@@ -40,34 +40,34 @@ func init() {
 
 	carapace.Gen(issueCmd).FlagCompletion(carapace.ActionMap{
 		"assignee": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionUsers(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA() // TODO assignable users
+			return action.ActionUsers(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA().NoSpace() // TODO assignable users
 		}),
 		"component": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionComponents(&issueOpts.Host, issueOpts.Project).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionComponents(&issueOpts.Host, issueOpts.Project).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"resolution": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionResolutions(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionResolutions(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"priority": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionPriorities(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionPriorities(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"project": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionProjects(&issueOpts.Host, projectOpts.Category).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionProjects(&issueOpts.Host, projectOpts.Category).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"status": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionStatuses(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionStatuses(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"not-status": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionStatuses(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionStatuses(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"status-category": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionStatusCategories(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionStatusCategories(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"not-status-category": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionStatusCategories(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionStatusCategories(&issueOpts.Host).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"type": carapace.ActionMultiParts(",", func(c carapace.Context) carapace.Action {
-			return action.ActionIssueTypes(&issueOpts.Host, issueOpts.Project).Invoke(c).Filter(c.Parts).ToA()
+			return action.ActionIssueTypes(&issueOpts.Host, issueOpts.Project).Invoke(c).Filter(c.Parts).ToA().NoSpace()
 		}),
 		"filter": action.ActionFilters(&issueOpts.Host),
 		"host":   action.ActionConfigHosts(),
