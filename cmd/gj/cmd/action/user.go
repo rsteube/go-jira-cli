@@ -8,7 +8,7 @@ import (
 func ActionUsers(host *string) carapace.Action {
 	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 
-		if users, err := api.FindUsers(*host, c.CallbackValue); err != nil {
+		if users, err := api.FindUsers(*host, c.Value); err != nil {
 			return carapace.ActionMessage(err.Error())
 		} else {
 			vals := make([]string, 0)
