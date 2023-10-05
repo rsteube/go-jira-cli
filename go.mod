@@ -7,7 +7,7 @@ require (
 	github.com/JohannesKaufmann/html-to-markdown v1.4.1
 	github.com/StevenACoffman/j2m v0.0.0-20190826163711-7d8d00c99217
 	github.com/andygrunwald/go-jira v1.16.0
-	github.com/cli/browser v1.2.0
+	github.com/cli/browser v1.3.0
 	github.com/cli/cli v1.14.0
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
