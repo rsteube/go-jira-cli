@@ -13,7 +13,7 @@ require (
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/muesli/gamut v0.3.1
-	github.com/rsteube/carapace v0.45.0
+	github.com/rsteube/carapace v0.46.2
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
 	gopkg.in/yaml.v2 v2.4.0
