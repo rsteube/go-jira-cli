@@ -12,7 +12,7 @@ require (
 	github.com/muesli/gamut v0.3.1
 	github.com/rsteube/carapace v0.49.2
 	github.com/spf13/cobra v1.10.2
-	github.com/spf13/pflag v1.0.9
+	github.com/spf13/pflag v1.0.10
 	gopkg.in/yaml.v2 v2.4.0
 )
 
